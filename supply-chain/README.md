@@ -1,9 +1,4 @@
-# hlf1.4-supply-chain
-Supply chain proof of concept in Hyperledger Fabric. Network with four companies and a specific chaincode exposed as rest API
-
-More info in Medium tutorials
-* [English](https://medium.com/coinmonks/creating-a-hyperledger-fabric-network-from-scratch-part-i-designing-the-network-23d803bbdb61) 
-* [Spanish](https://medium.com/@ialberquilla/creando-una-red-hyperledger-fabric-desde-cero-96314117e633)
+# Food-supplychain
 
 # Installation instructions
 
@@ -14,29 +9,26 @@ https://hyperledger-fabric.readthedocs.io/en/release-1.4/prereqs.html
 `curl -sSL http://bit.ly/2ysbOFE | bash -s 1.4.3`
 
 3. Go to fabric samples:
-`cd fabric-samples`
 
-4. Download the template:
-`git clone https://github.com/ialberquilla/hlf1.4-supply-chain`
-
-6. Go to 
-`hlf1.4-supply-chain`
-
-5. Install node-js dependencies
-`./network.sh install`
-
+4. Copy bin folder to your project folder
 
 
 # Start the network
 1. Generate the crypto material and start the network
+cd supply-chain
+
 `./network.sh start`
 This will create the crypto material for all the orgs, start the network and register it's admins and users. Then will start the API at localhost:3000
 
 
 # Re-start the API server
+cd supply-chain
+
 `npm start`
 
 # Stop the network
+cd supply-chain
+
 `./network.sh stop`
 
 
@@ -47,7 +39,7 @@ This will create the crypto material for all the orgs, start the network and reg
 
 * **URL**
 
-  `/api/addTuna`
+  `/api/createFarmer`
 
 * **Method:**
   
@@ -56,35 +48,29 @@ This will create the crypto material for all the orgs, start the network and reg
 * **Data Params**
 
 ```
-  "id":integer,
-  "latitude":string,
-  "longitude":string,
-  "length":integer,
-  "weight":integer
+  { 
+    "information":{"name":"quang"}
+  }
  ``` 
 
 * **Success Response:**
   
 ``` 
-{	
-  "status":"OK - Transaction has been submitted",
-  "txid":"7f485a8c3a3c7f982aed76e3b20a0ad0fb4cbf174fbeabc792969a30a3383499"
-} 
+{ "status":"Create Farmer successful!",
+  "txid":"c23ce6e0065a7c79d11e60168796f2c8d7c9bbfbe077a57c0886d255006f0df6"
+}
 ```
  
 * **Sample Call:**
 
- ``` 
- curl --request POST \
-  --url http://localhost:3000/api/addTuna \
+ ```
+curl --request POST \
+  --url http://localhost:3000/api/createFarmer \
   --header 'content-type: application/json' \
   --data '{
-			"id":10001,
-			"latitude":"43.3623",
-			"longitude":"8.4115",
-			"length":34,
-			"weight":50
-		   }' 
+
+              "information":{"name":"quang"}
+          }'
  ```
             
 **getTuna**
@@ -93,34 +79,33 @@ This will create the crypto material for all the orgs, start the network and reg
 
 * **URL**
 
-  `/api/getTuna/:id`
+  `/api/getFarmer/:id`
 
 * **Method:**
   
 	`GET` 
 
 * **URL Params**
-    `"id":integer`
+    `"id":String`
 
 * **Success Response:**
   
  ``` 
- {
-    "result": {
-        "id": integer
-        "latitude": string
-        "longitude": string
-        "length": integer
-        "weight": integer
-    } 
- }
+  {
+    {
+      "result":
+      {
+        "id":"Farmer1e2c3f54-58f4-43ec-9d99-c12e5b1efee6",
+        "information":{"name":"quang"}}
+      }
+  }
  ```
  
 * **Sample Call:**
 
 ``` 
 curl --request GET \
-  --url 'http://localhost:3000/api/getTuna/<TunaId>' \
+  --url 'http://localhost:3000/api/getFarmer/<TunaId>' \
   --header 'content-type: application/json' \ 
 ```
 
