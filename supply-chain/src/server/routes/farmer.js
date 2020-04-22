@@ -45,7 +45,7 @@ router.get('/', async function (req, res) {
         const contract = await fabricNetwork.connectNetwork('connection-retailer.json', 'wallet/wallet-retailer');
         const result = await contract.evaluateTransaction('queryAllAsset', 'Farmer');
         let response = JSON.parse(result.toString());
-        res.json({ result: response });
+        res.json({ farmers: response });
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({

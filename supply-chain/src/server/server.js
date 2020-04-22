@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-const fabricNetwork = require('./fabricNetwork');
+const cors = require('cors');
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -128,6 +128,14 @@ app.use(bodyParser.urlencoded({
 //   }
 
 // })
+// set up cors to allow us to accept requests from our client
+app.use(
+  cors({
+    origin: '*', // allow to server to accept request from different origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true // allow session cookie from browser to pass through
+  })
+);
 
 const farmerRoutes = require('./routes/farmer');
 
