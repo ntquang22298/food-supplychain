@@ -7,7 +7,7 @@ export const producerService = {
 }
 
 // create a farmer
-async function getFarmer(farmer) {
+async function createFarmer(farmer) {
     try {
         let respone = axios.post(`${process.env.REACT_APP_API_BACKEND}/farmer`, {
             information: farmer.information
