@@ -1,19 +1,26 @@
-const router = require('express').Router();
-var uuidv4 = require('uuid/v4');
-const fabricNetwork = require('../fabricNetwork');
+const router = require("express").Router();
+var uuidv4 = require("uuid/v4");
+const fabricNetwork = require("../fabricNetwork");
 
-router.post('/', async function (req, res) {
-
+router.post("/", async function(req, res) {
     try {
-        const contract = await fabricNetwork.connectNetwork('connection-producer.json', 'wallet/wallet-producer');
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-producer.json",
+            "wallet/wallet-producer"
+        );
         let farmer = {
-            id: 'Farmer' + uuidv4(),
-            information: req.body.information
-        }
-        let tx = await contract.submitTransaction('addAsset', JSON.stringify(farmer));
+            id: "Farmer" + uuidv4(),
+            name: req.body.name,
+            address: req.body.address,
+            description: req.body.description
+        };
+        let tx = await contract.submitTransaction(
+            "addAsset",
+            JSON.stringify(farmer)
+        );
 
         res.json({
-            status: 'Create Farmer successful!',
+            status: "Create Farmer successful!",
             txid: tx.toString()
         });
     } catch (error) {
@@ -22,13 +29,18 @@ router.post('/', async function (req, res) {
             error: error
         });
     }
-
 });
 
-router.get('/:id', async function (req, res) {
+router.get("/:id", async function(req, res) {
     try {
-        const contract = await fabricNetwork.connectNetwork('connection-retailer.json', 'wallet/wallet-retailer');
-        const result = await contract.evaluateTransaction('queryAsset', req.params.id.toString());
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-retailer.json",
+            "wallet/wallet-retailer"
+        );
+        const result = await contract.evaluateTransaction(
+            "queryAsset",
+            req.params.id.toString()
+        );
         let response = JSON.parse(result.toString());
         res.json({ result: response });
     } catch (error) {
@@ -37,13 +49,18 @@ router.get('/:id', async function (req, res) {
             error: error
         });
     }
-})
+});
 
-
-router.get('/', async function (req, res) {
+router.get("/", async function(req, res) {
     try {
-        const contract = await fabricNetwork.connectNetwork('connection-retailer.json', 'wallet/wallet-retailer');
-        const result = await contract.evaluateTransaction('queryAllAsset', 'Farmer');
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-retailer.json",
+            "wallet/wallet-retailer"
+        );
+        const result = await contract.evaluateTransaction(
+            "queryAllAsset",
+            "Farmer"
+        );
         let response = JSON.parse(result.toString());
         res.json({ farmers: response });
     } catch (error) {
@@ -52,6 +69,6 @@ router.get('/', async function (req, res) {
             error: error
         });
     }
-})
+});
 
 module.exports = router;
