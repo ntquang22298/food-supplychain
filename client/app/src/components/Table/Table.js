@@ -8,6 +8,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 // core components
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 
@@ -22,7 +26,6 @@ export default function CustomTable(props) {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  console.log(tableData);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -45,13 +48,20 @@ export default function CustomTable(props) {
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell className={classes.tableCell + ' ' + classes.tableHeadCell}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
         ) : null}
         <TableBody>
           {tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
             return (
-              <TableRow key={row.id} className={classes.tableBodyRow}>
+              <TableRow
+                key={row.id}
+                className={classes.tableBodyRow}
+                onClick={(e) => props.showDetail(e, row)}
+              >
                 {columns.map((column) => {
                   const value = row[column.id];
                   return (
@@ -64,6 +74,23 @@ export default function CustomTable(props) {
                     </TableCell>
                   );
                 })}
+                <TableCell>
+                  <IconButton
+                    aria-label='edit'
+                    onClick={(e) => props.handelEdit(e, row)}
+                    className={classes.margin}
+                  >
+                    <EditIcon color='primary' />
+                  </IconButton>
+
+                  <IconButton
+                    aria-label='delete'
+                    onClick={(e) => props.handelDelete(e, row)}
+                    className={classes.margin}
+                  >
+                    <DeleteIcon color='secondary' />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             );
           })}

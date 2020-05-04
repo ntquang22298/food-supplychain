@@ -22,6 +22,16 @@ const ProducerReducer = (state = initialState, action) => {
         ...state,
         farmer: action.farmer
       };
+    case actions.producer.EDIT_FARMER:
+      return {
+        ...state,
+        farmer: action.farmer
+      };
+    case actions.producer.DELETE_FARMER:
+      return {
+        ...state,
+        farmer: action.farmer
+      };
     default:
       return state;
   }

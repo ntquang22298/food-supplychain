@@ -59,7 +59,41 @@ class SypplyChain extends Contract {
             }
         }
     }
+    async editAsset(ctx, assetId, name, address, description, imageUrl) {
+        console.info("============= START : editAsset ===========");
 
+        const assetAsBytes = await ctx.stub.getState(assetId); // get the asset from chaincode state
+        if (!assetAsBytes || assetAsBytes.length === 0) {
+            throw new Error(`${assetId} does not exist`);
+        }
+        const asset = JSON.parse(assetAsBytes.toString());
+        asset.name = name;
+        asset.address = address;
+        asset.description = description;
+        asset.imageUrl = imageUrl;
+
+        await ctx.stub.putState(assetId, Buffer.from(JSON.stringify(asset)));
+        console.info("============= END : editAsset ===========");
+        return ctx.stub.getTxID();
+    }
+    async deleteAsset(ctx, assetId) {
+        // Delete the key from the state in ledger
+        console.info("============= START : deleteAsset ===========");
+
+        const assetAsBytes = await ctx.stub.getState(assetId); // get the asset from chaincode state
+        if (!assetAsBytes || assetAsBytes.length === 0) {
+            throw new Error(`${assetId} does not exist`);
+        }
+        try {
+            await ctx.stub.deleteState(assetId);
+            console.log(`Delete asset ${assetId} successful`);
+        } catch (e) {
+            console.log(e);
+
+            throw new Error(`delete error`, e);
+        }
+        console.info("============= END : deleteAsset ===========");
+    }
     async setPosition(ctx, id, latitude, longitude) {
         console.info("============= START : Set position ===========");
         const keyAsBytes = await ctx.stub.getState(id);

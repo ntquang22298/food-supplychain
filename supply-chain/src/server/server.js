@@ -1,13 +1,28 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+var express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const helmet = require("helmet");
+const cors = require("cors");
+const checkJWT = require("./middlewares/check-jwt");
 var app = express();
-const cors = require('cors');
-app.set('view engine', 'ejs');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
+require("dotenv").config();
+
+mongoose.connect(
+    process.env.MONGODB_URI,
+    { useUnifiedTopology: true, useNewUrlParser: true },
+    error => {
+        if (error) console.log(error);
+    }
+);
+mongoose.set("useCreateIndex", true);
+
+app.set("view engine", "ejs");
+// security
+app.use(helmet());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.post('/api/addTuna', async function (req, res) {
 
@@ -49,7 +64,6 @@ app.use(bodyParser.urlencoded({
 //   }
 // })
 
-
 // app.post('/api/setPosition', async function (req, res) {
 
 //   try {
@@ -67,7 +81,6 @@ app.use(bodyParser.urlencoded({
 //   }
 
 // });
-
 
 // app.get('/api/getHistorySushi/:id', async function (req, res) {
 //   try {
@@ -104,7 +117,6 @@ app.use(bodyParser.urlencoded({
 //   }
 // })
 
-
 // app.post('/api/addShushi', async function (req, res) {
 //   try {
 //     const contract = await fabricNetwork.connectNetwork('connection-manufacturer.json', 'wallet/wallet-manufacturer');
@@ -130,19 +142,21 @@ app.use(bodyParser.urlencoded({
 // })
 // set up cors to allow us to accept requests from our client
 app.use(
-  cors({
-    origin: '*', // allow to server to accept request from different origin
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true // allow session cookie from browser to pass through
-  })
+    cors({
+        origin: "*", // allow to server to accept request from different origin
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true // allow session cookie from browser to pass through
+    })
 );
 
-const farmerRoutes = require('./routes/farmer');
+const authRoutes = require("./routes/auth");
+const farmerRoutes = require("./routes/farmer");
 
-app.use('/farmer', farmerRoutes);
+app.use("/auth", authRoutes);
+app.use("/farmer", checkJWT, farmerRoutes);
 
 app.listen(3000, () => {
-  console.log("***********************************");
-  console.log("API server listening at localhost:3000");
-  console.log("***********************************");
+    console.log("***********************************");
+    console.log("API server listening at localhost:3000");
+    console.log("***********************************");
 });
