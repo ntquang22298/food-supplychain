@@ -9,7 +9,7 @@ const { FileSystemWallet, X509WalletMixin } = require("fabric-network");
 const fs = require("fs");
 const path = require("path");
 const User = require("./server/model/User");
-const USER_ROLES = require("./server/configs/constant");
+const USER_ROLES = require("./server/configs/constant").USER_ROLES;
 const mongoose = require("mongoose");
 require("dotenv").config();
 

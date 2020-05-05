@@ -7,6 +7,7 @@ import PrivateRoute from './PrivateRoute';
 import Admin from 'layouts/Admin.js';
 import 'assets/css/material-dashboard-react.css?v=1.8.0';
 const hist = createBrowserHistory();
+
 function App() {
   return (
     <div>
@@ -14,7 +15,7 @@ function App() {
         <Switch>
           <Route path='/signin' component={SignIn} />
           <PrivateRoute path='/admin' component={Admin} />
-          <Redirect from='/' to='/signin' />
+          <Redirect from='/' to='/admin' />
         </Switch>
       </Router>
     </div>

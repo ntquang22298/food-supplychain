@@ -7,8 +7,6 @@ export const authService = {
 
 async function signIn(username, password) {
   try {
-    console.log(username, password);
-
     let respone = await axios.post(
       `${process.env.REACT_APP_API_BACKEND}/auth/signin`,
       { username: username, password: password },

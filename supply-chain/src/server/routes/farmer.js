@@ -2,7 +2,7 @@ const router = require("express").Router();
 var uuidv4 = require("uuid/v4");
 const fabricNetwork = require("../fabricNetwork");
 const registerUser = require("../../registerUser");
-const USER_ROLES = require("../configs/constant");
+const USER_ROLES = require("../configs/constant").USER_ROLES;
 const { body, validationResult, check } = require("express-validator");
 const checkJWT = require("../middlewares/check-jwt");
 

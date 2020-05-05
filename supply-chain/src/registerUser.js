@@ -79,7 +79,7 @@ async function registerUser(username, org, role, admin) {
             const upper = org.replace(/^\w/, c => c.toUpperCase());
             // Register the user, enroll the user, and import the new identity into the wallet.
             const secret = await ca.register(
-                { enrollmentID: username, role: role },
+                { enrollmentID: username, role: "client" },
                 adminIdentity
             );
             const enrollment = await ca.enroll({

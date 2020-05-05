@@ -1,5 +1,5 @@
 module.exports.USER_ROLES = {
-    ROLES: [1, 2, 3, 4],
+    ROLES: [1, 2, 3, 4, 5, 6, 7, 8],
     ADMIN_PRODUCER: 1,
     FARMER: 2,
     ADMIN_MANUFACTURER: 3,
