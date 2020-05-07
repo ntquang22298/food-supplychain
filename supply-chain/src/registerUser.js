@@ -98,7 +98,6 @@ async function registerUser(username, org, role, admin) {
         }
     } catch (error) {
         console.error(`Failed to register user ${username}: ${error}`);
-        process.exit(1);
     }
 }
 module.exports = registerUser;

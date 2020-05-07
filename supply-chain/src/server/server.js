@@ -151,12 +151,14 @@ app.use(
 
 const authRoutes = require("./routes/auth");
 const farmerRoutes = require("./routes/farmer");
-
+const productRoutes = require("./routes/product");
 app.use("/auth", authRoutes);
 app.use("/farmer", checkJWT, farmerRoutes);
+app.use("/product", checkJWT, productRoutes);
 
 app.listen(3000, () => {
     console.log("***********************************");
     console.log("API server listening at localhost:3000");
     console.log("***********************************");
 });
+module.exports = app;

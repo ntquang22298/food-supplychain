@@ -5,9 +5,14 @@ export const producerService = {
   getFarmer,
   getAllFarmer,
   editFarmer,
-  deleteFarmer
+  deleteFarmer,
+  createProduct,
+  editProduct,
+  getProduct,
+  getAllProduct,
+  deleteProduct
 };
-
+//------------Farmer-----------------------------------------------------------------------//
 // create a farmer
 async function createFarmer(farmer) {
   try {
@@ -24,14 +29,13 @@ async function createFarmer(farmer) {
         headers: authHeader()
       }
     );
-    console.log(respone);
 
     return respone.data.farmers;
   } catch (error) {
     throw error;
   }
 }
-
+// edit farmer
 async function editFarmer(farmerId, farmer) {
   try {
     let respone = await axios.put(
@@ -73,9 +77,7 @@ async function getFarmer(farmerId) {
     let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/farmer/${farmerId}`, {
       headers: authHeader()
     });
-    console.log(respone);
-
-    return respone.farmers;
+    return respone.data.farmer;
   } catch (error) {
     throw error;
   }
@@ -90,6 +92,89 @@ async function getAllFarmer() {
 
     return respone.data.farmers;
   } catch (error) {
+    throw error;
+  }
+}
+//-----------------------------------------------------Farmer-------------------------------------------//
+
+//-----------------------------------------------------Product------------------------------------------//
+//create product
+async function createProduct(product) {
+  try {
+    let respone = await axios.post(
+      `${process.env.REACT_APP_API_BACKEND}/product`,
+      {
+        imageUrl: product.imageUrl,
+        name: product.name,
+        type: product.type,
+        origin: product.origin,
+        description: product.description,
+        farmerId: product.farmerId
+      },
+      {
+        headers: authHeader()
+      }
+    );
+    return respone;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function editProduct(productId, product) {
+  try {
+    let respone = await axios.put(
+      `${process.env.REACT_APP_API_BACKEND}/product/${productId}`,
+      {
+        imageUrl: product.imageUrl,
+        name: product.name,
+        type: product.type,
+        origin: product.origin,
+        description: product.description,
+        farmerId: product.farmerId
+      },
+      {
+        headers: authHeader()
+      }
+    );
+    return respone;
+  } catch (error) {
+    throw error;
+  }
+}
+async function getAllProduct() {
+  try {
+    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/product`, {
+      headers: authHeader()
+    });
+
+    return respone.data.products;
+  } catch (error) {
+    throw error;
+  }
+}
+async function getProduct(productId) {
+  try {
+    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/product/${productId}`, {
+      headers: authHeader()
+    });
+    console.log(respone.data.product);
+
+    return respone.data.product;
+  } catch (error) {
+    throw error;
+  }
+}
+async function deleteProduct(productId) {
+  try {
+    let respone = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/farmer/${productId}`, {
+      headers: authHeader()
+    });
+
+    return respone;
+  } catch (error) {
+    console.log(error);
+
     throw error;
   }
 }

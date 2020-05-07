@@ -1,80 +1,46 @@
 const router = require("express").Router();
-var uuidv4 = require("uuid/v4");
 const fabricNetwork = require("../fabricNetwork");
-const registerUser = require("../../registerUser");
-const USER_ROLES = require("../configs/constant").USER_ROLES;
 const { body, validationResult, check } = require("express-validator");
+var uuidv4 = require("uuid/v4");
+const USER_ROLES = require("../configs/constant").USER_ROLES;
 
 require("dotenv").config();
-router.post(
-    "/",
-    [
-        body("username")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape(),
-        body("name")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape(),
-        body("address")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape()
-    ],
-    async function(req, res) {
-        try {
-            if (req.decoded.user.role !== USER_ROLES.ADMIN_PRODUCER) {
-                return res.status(403).json({
-                    msg: "Permission Denied"
-                });
-            }
 
-            const errors = validationResult(req);
+router.post("/", async function(req, res) {
+    try {
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-producer.json",
+            "wallet/wallet-producer",
+            process.env.ADMIN_PRODUCER_USERNAME
+        );
+        let product = {
+            id: "Product" + uuidv4(),
+            imageUrl: req.body.imageUrl,
+            name: req.body.name,
+            type: req.body.type,
+            packtype: "",
+            weight: "",
+            mfgDate: "",
+            expDate: "",
+            origin: req.body.origin,
+            description: req.body.description,
+            growId: "",
+            farmerId: req.body.farmerId
+        };
 
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
-            const contract = await fabricNetwork.connectNetwork(
-                "connection-producer.json",
-                "wallet/wallet-producer",
-                process.env.ADMIN_PRODUCER_USERNAME
-            );
+        let tx = await contract.submitTransaction(
+            "addAsset",
+            JSON.stringify(product)
+        );
 
-            let farmer = {
-                id: "Farmer" + uuidv4(),
-                name: req.body.name,
-                address: req.body.address,
-                description: req.body.description,
-                imageUrl: req.body.imageUrl
-            };
-            let tx = await contract.submitTransaction(
-                "addAsset",
-                JSON.stringify(farmer)
-            );
-
-            await registerUser(
-                req.body.username,
-                "producer",
-                USER_ROLES.FARMER,
-                process.env.ADMIN_PRODUCER_USERNAME
-            );
-
-            res.json({
-                status: "Create Farmer successful!",
-                txid: tx.toString()
-            });
-        } catch (error) {
-            console.error(`Failed to evaluate transaction: ${error}`);
-            res.status(500).json({
-                error: error
-            });
-        }
+        res.json({
+            status: "Create Product successful!",
+            txid: tx.toString()
+        });
+    } catch (error) {
+        console.log("create product error", error);
     }
-);
+});
 
 router.get("/:id", async function(req, res) {
     try {
@@ -88,7 +54,7 @@ router.get("/:id", async function(req, res) {
             req.params.id.toString()
         );
         let response = JSON.parse(result.toString());
-        res.json({ result: response });
+        res.json({ product: response });
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
@@ -109,21 +75,23 @@ router.put("/:id", async function(req, res) {
             "wallet/wallet-producer",
             process.env.ADMIN_PRODUCER_USERNAME
         );
-        let farmer = {
+        let product = {
             id: req.params.id.toString(),
+            imageUrl: req.body.imageUrl,
             name: req.body.name,
-            address: req.body.address,
+            type: req.body.type,
+            origin: req.body.origin,
             description: req.body.description,
-            imageUrl: req.body.imageUrl
+            farmerId: req.body.farmerId
         };
         const result = await contract.submitTransaction(
             "editAsset",
-            farmer.id.toString(),
-            JSON.stringify(farmer)
+            product.id.toString(),
+            JSON.stringify(product)
         );
 
         res.json({
-            status: "Edit Farmer successful!",
+            status: "Edit Product successful!",
             txid: result.toString()
         });
     } catch (error) {
@@ -178,10 +146,10 @@ router.get("/", async function(req, res) {
         );
         const result = await contract.evaluateTransaction(
             "queryAllAsset",
-            "Farmer"
+            "Product"
         );
         let response = JSON.parse(result.toString());
-        res.json({ farmers: response });
+        res.json({ products: response });
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
@@ -189,5 +157,4 @@ router.get("/", async function(req, res) {
         });
     }
 });
-
 module.exports = router;

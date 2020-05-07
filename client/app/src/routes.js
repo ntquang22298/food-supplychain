@@ -1,10 +1,10 @@
 // @material-ui/icons
-import Dashboard from '@material-ui/icons/Dashboard';
+// import Dashboard from '@material-ui/icons/Dashboard';
 import Person from '@material-ui/icons/Person';
-import LibraryBooks from '@material-ui/icons/LibraryBooks';
-import BubbleChart from '@material-ui/icons/BubbleChart';
-import LocationOn from '@material-ui/icons/LocationOn';
-import Notifications from '@material-ui/icons/Notifications';
+import Spa from '@material-ui/icons/Spa';
+// import BubbleChart from '@material-ui/icons/BubbleChart';
+// import LocationOn from '@material-ui/icons/LocationOn';
+// import Notifications from '@material-ui/icons/Notifications';
 // core components/views for Admin layout
 // import DashboardPage from 'views/Dashboard/Dashboard.js';
 // import UserProfile from 'views/UserProfile/UserProfile.js';
@@ -12,8 +12,8 @@ import Notifications from '@material-ui/icons/Notifications';
 // import Icons from 'views/Icons/Icons.js';
 // import Maps from 'views/Maps/Maps.js';
 // import NotificationsPage from 'views/Notifications/Notifications.js';
-import Farmer from 'views/Farmer/Farmer.js';
-
+import Farmer from 'views/Farmer/Farmer';
+import Product from 'views/Product/Product';
 const dashboardRoutes = [
   // {
   //   path: '/dashboard',
@@ -27,6 +27,13 @@ const dashboardRoutes = [
     name: 'Farmer',
     icon: Person,
     component: Farmer,
+    layout: '/admin'
+  },
+  {
+    path: '/product',
+    name: 'Product',
+    icon: Spa,
+    component: Product,
     layout: '/admin'
   }
   // {

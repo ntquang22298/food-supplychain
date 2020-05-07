@@ -93,7 +93,6 @@ router.post(
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
         }
-
         try {
             let user = await User.findOne({ username: req.body.username });
 

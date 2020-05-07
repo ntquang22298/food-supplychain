@@ -14,8 +14,7 @@ function App() {
       <Router history={hist}>
         <Switch>
           <Route path='/signin' component={SignIn} />
-          <PrivateRoute path='/admin' component={Admin} />
-          <Redirect from='/' to='/admin' />
+          <PrivateRoute path='/' component={Admin} />
         </Switch>
       </Router>
     </div>

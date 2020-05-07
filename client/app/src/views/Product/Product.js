@@ -5,6 +5,7 @@ import * as action from 'actions/producer.actions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import storage from 'config/storage';
+
 // core components
 
 import Table from 'components/Table/Table.js';
@@ -32,6 +33,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ImageIcon from '@material-ui/icons/Image';
 import WorkIcon from '@material-ui/icons/Work';
+import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
     '&,& a,& a:hover,& a:focus': {
@@ -85,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Farmer() {
+export default function Product() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const producer = useSelector((state) => state.producer);
@@ -99,21 +101,23 @@ export default function Farmer() {
   const [detailDialog, setDetailDialog] = React.useState(false);
   // const [selectedFile, setSelectedFile] = React.useState(null);
   const [preview, setPreview] = React.useState(null);
-  const initFarmer = {
+  const initProduct = {
     id: '',
-    username: '',
+    imageUrl: '',
     name: '',
-    address: '',
+    type: '',
+    origin: '',
     description: '',
-    imageUrl: ''
+    farmerId: ''
   };
-  const [farmer, setFarmer] = React.useState(initFarmer);
+  const [product, setProduct] = React.useState(initProduct);
   useEffect(() => {
-    dispatch(action.getAllFarmer());
+    dispatch(action.getAllProduct());
   }, [dispatch]);
   const columns = [
     { id: 'name', label: 'Name' },
-    { id: 'address', label: 'Address' }
+    { id: 'origin', label: 'Origin' },
+    { id: 'farmerId', label: 'Farmer' }
   ];
   // open dialog when user click create button
   const handleCreateOpen = () => {
@@ -129,12 +133,14 @@ export default function Farmer() {
     setDialog('edit');
     setPreview('');
 
-    setFarmer({
+    setProduct({
       id: row.id,
+      imageUrl: row.imageUrl,
       name: row.name,
-      address: row.address,
+      type: row.type,
+      origin: row.origin,
       description: row.description,
-      imageUrl: row.imageUrl
+      farmerId: row.farmerId
     });
     setOpen(true);
   };
@@ -144,35 +150,34 @@ export default function Farmer() {
    **/
   const handleClose = () => {
     setPreview('');
-    setFarmer(initFarmer);
+    setProduct(initProduct);
     setOpen(false);
     setDetailDialog(false);
   };
   const handleChange = (e) => {
-    e.preventDefault();
     const { name, value } = e.target;
 
-    setFarmer({ ...farmer, [name]: value });
+    setProduct({ ...product, [name]: value });
   };
 
-  //create a farmer
+  //create a product
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
-    farmer.imageUrl = preview;
-    setFarmer(farmer);
+    product.imageUrl = preview;
 
-    await dispatch(action.createFarmer(farmer));
+    setProduct(product);
+    await dispatch(action.createProduct(product));
     setLoading(false);
     handleClose();
   };
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    farmer.imageUrl = preview !== '' ? preview : farmer.imageUrl;
-    setFarmer(farmer);
-    await dispatch(action.editFarmer(farmer.id, farmer));
+    product.imageUrl = preview !== '' ? preview : product.imageUrl;
+
+    setProduct(product);
+    await dispatch(action.editProduct(product.id, product));
     setLoading(false);
     handleClose();
   };
@@ -185,22 +190,17 @@ export default function Farmer() {
   const handleDelete = async () => {
     setLoading(true);
 
-    await dispatch(action.deleteFarmer(id));
+    await dispatch(action.deleteProduct(id));
     setLoading(false);
     setDeleteAlert(false);
   };
-  const showDetail = (e, row) => {
+  const showDetail = async (e, row) => {
     e.stopPropagation();
-    setFarmer({
-      id: row.id,
-      name: row.name,
-      address: row.address,
-      description: row.description,
-      imageUrl: row.imageUrl
-    });
+    setPreview('');
+    setProduct(row);
     setDetailDialog(true);
   };
-  const fileChangedHandler = async (e) => {
+  const fileChangedHandler = (e) => {
     setLoading(true);
     var file = e.target.files[0];
     var uploadTask = storage.ref('/farmers/' + file.name).put(file);
@@ -232,19 +232,19 @@ export default function Farmer() {
   return (
     <div>
       <ToastContainer autoClose={2000} />
-      {/*Farmer Table*/}
+      {/*Product Table*/}
       <Card>
         <CardHeader color='success'>
           <CardIcon color='info' onClick={() => handleCreateOpen()}>
             <Icon>add_circle</Icon>
           </CardIcon>
-          <h4 className={classes.cardTitleWhite}>Farmer List</h4>
+          <h4 className={classes.cardTitleWhite}>Product List</h4>
         </CardHeader>
         <CardBody>
           <Table
             tableHeaderColor='info'
             columns={columns}
-            tableData={producer.farmerList ? producer.farmerList : []}
+            tableData={producer.productList ? producer.productList : []}
             handelEdit={handelEditOpen}
             handelDelete={handleShowAlert}
             showDetail={showDetail}
@@ -264,7 +264,7 @@ export default function Farmer() {
           <CircularProgress color='inherit' />
         </Backdrop>
         <DialogTitle id='responsive-dialog-title'>
-          {dialog === 'create' ? 'Create Farmer' : 'Edit Farmer'}
+          {dialog === 'create' ? 'Create Product' : 'Edit Product'}
         </DialogTitle>
         <DialogContent>
           <form>
@@ -280,7 +280,7 @@ export default function Farmer() {
               <label htmlFor='icon-button-file'>
                 <IconButton color='primary' aria-label='upload picture' component='span'>
                   <Avatar
-                    src={preview !== '' ? preview : farmer.imageUrl}
+                    src={preview !== '' ? preview : product.imageUrl}
                     style={{
                       width: '130px',
                       height: '130px'
@@ -289,19 +289,6 @@ export default function Farmer() {
                 </IconButton>
               </label>
             </div>
-            {dialog === 'create' ? (
-              <TextField
-                autoFocus
-                margin='dense'
-                id='username'
-                label='UserName'
-                type='text'
-                fullWidth
-                value={farmer.username}
-                onChange={handleChange}
-                name='username'
-              />
-            ) : null}
             <TextField
               autoFocus
               margin='dense'
@@ -309,19 +296,30 @@ export default function Farmer() {
               label='Name'
               type='text'
               fullWidth
-              value={farmer.name}
+              value={product.name}
               onChange={handleChange}
               name='name'
             />
             <TextField
               margin='dense'
-              id='address'
-              label='Address'
+              id='type'
+              label='Type'
+              type='type'
+              fullWidth
+              value={product.type}
+              onChange={handleChange}
+              name='type'
+            />
+
+            <TextField
+              margin='dense'
+              id='origin'
+              label='Origin'
               type='text'
               fullWidth
-              value={farmer.address}
+              value={product.origin}
               onChange={handleChange}
-              name='address'
+              name='origin'
             />
 
             <TextField
@@ -330,9 +328,17 @@ export default function Farmer() {
               multiline
               rows={12}
               fullWidth
-              value={farmer.description}
+              value={product.description}
               onChange={handleChange}
               name='description'
+            />
+            <TextField
+              id='standard-multiline-static'
+              label='FarmerId'
+              fullWidth
+              value={product.farmerId}
+              onChange={handleChange}
+              name='farmerId'
             />
           </form>
         </DialogContent>
@@ -354,17 +360,17 @@ export default function Farmer() {
         fullWidth
         fullScreen={fullScreen}
         open={detailDialog}
-        scroll='paper'
+        scroll='body'
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
       >
         <Backdrop className={classes.backdrop} open={loading}>
           <CircularProgress color='inherit' />
         </Backdrop>
-        <DialogTitle id='responsive-dialog-title'>Farmer detail</DialogTitle>
+        <DialogTitle id='responsive-dialog-title'>Product detail</DialogTitle>
         <DialogContent>
           <Avatar
-            src={farmer.imageUrl}
+            src={preview !== '' ? preview : product.imageUrl}
             style={{
               margin: 'auto',
               width: '130px',
@@ -379,7 +385,7 @@ export default function Farmer() {
                     <ImageIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary='Name' secondary={farmer.name} />
+                <ListItemText primary='Name' secondary={product.name} />
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -387,7 +393,7 @@ export default function Farmer() {
                     <WorkIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary='Address' secondary={farmer.address} />
+                <ListItemText primary='Type' secondary={product.type} />
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
@@ -395,7 +401,23 @@ export default function Farmer() {
                     <WorkIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary='Description' secondary={farmer.description} />
+                <ListItemText primary='Origin' secondary={product.origin} />
+              </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <WorkIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary='Description' secondary={product.description} />
+              </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <BeachAccessIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary='Farmer' secondary={product.farmerId} />
               </ListItem>
             </List>
           </div>

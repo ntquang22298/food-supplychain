@@ -59,20 +59,15 @@ class SypplyChain extends Contract {
             }
         }
     }
-    async editAsset(ctx, assetId, name, address, description, imageUrl) {
+    async editAsset(ctx, assetId, newAsset) {
         console.info("============= START : editAsset ===========");
 
         const assetAsBytes = await ctx.stub.getState(assetId); // get the asset from chaincode state
         if (!assetAsBytes || assetAsBytes.length === 0) {
             throw new Error(`${assetId} does not exist`);
         }
-        const asset = JSON.parse(assetAsBytes.toString());
-        asset.name = name;
-        asset.address = address;
-        asset.description = description;
-        asset.imageUrl = imageUrl;
 
-        await ctx.stub.putState(assetId, Buffer.from(JSON.stringify(asset)));
+        await ctx.stub.putState(assetId, Buffer.from(newAsset));
         console.info("============= END : editAsset ===========");
         return ctx.stub.getTxID();
     }
