@@ -125,6 +125,7 @@ router.post(
             return res.json({
                 success: true,
                 fullname: user.fullname,
+                username: req.body.username,
                 msg: "Login success",
                 token: token,
                 role: user.role

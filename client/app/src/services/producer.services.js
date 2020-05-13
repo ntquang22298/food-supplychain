@@ -10,7 +10,8 @@ export const producerService = {
   editProduct,
   getProduct,
   getAllProduct,
-  deleteProduct
+  deleteProduct,
+  getAllProductByFarmer
 };
 //------------Farmer-----------------------------------------------------------------------//
 // create a farmer
@@ -108,8 +109,7 @@ async function createProduct(product) {
         name: product.name,
         type: product.type,
         origin: product.origin,
-        description: product.description,
-        farmerId: product.farmerId
+        description: product.description
       },
       {
         headers: authHeader()
@@ -130,8 +130,7 @@ async function editProduct(productId, product) {
         name: product.name,
         type: product.type,
         origin: product.origin,
-        description: product.description,
-        farmerId: product.farmerId
+        description: product.description
       },
       {
         headers: authHeader()
@@ -175,6 +174,21 @@ async function deleteProduct(productId) {
   } catch (error) {
     console.log(error);
 
+    throw error;
+  }
+}
+
+async function getAllProductByFarmer(farmerUsername) {
+  try {
+    let respone = await axios.get(
+      `${process.env.REACT_APP_API_BACKEND}/product/farmer/${farmerUsername}`,
+      {
+        headers: authHeader()
+      }
+    );
+
+    return respone.data.products;
+  } catch (error) {
     throw error;
   }
 }

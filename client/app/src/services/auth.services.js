@@ -14,12 +14,16 @@ async function signIn(username, password) {
     );
     let user = respone.data;
     if (respone.data.success) {
+      console.log(user);
+
       localStorage.setItem('user', JSON.stringify(user));
 
       return user;
     }
     return null;
   } catch (e) {
+    console.log(e);
+
     throw e;
   }
 }

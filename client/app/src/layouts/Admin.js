@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 // creates a beautiful scrollbar
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
@@ -10,8 +10,7 @@ import Navbar from 'components/Navbars/Navbar.js';
 import Footer from 'components/Footer/Footer.js';
 import Sidebar from 'components/Sidebar/Sidebar.js';
 // import FixedPlugin from 'components/FixedPlugin/FixedPlugin.js';
-
-import routes from 'routes.js';
+import systemRoutes from 'routes.js';
 
 import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
 
@@ -19,15 +18,6 @@ import bgImage from 'assets/img/sidebar-2.jpg';
 import logo from 'assets/img/logo_transparent.png';
 
 let ps;
-
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
-    })}
-    <Redirect from='/admin' to='/admin/dashboard' />
-  </Switch>
-);
 
 const useStyles = makeStyles(styles);
 
@@ -41,6 +31,8 @@ export default function Admin({ ...rest }) {
   const [color] = React.useState('blue');
   // const [fixedClasses, setFixedClasses] = React.useState('dropdown show');
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [routes, setRoutes] = React.useState([]);
+
   // const handleImageClick = (image) => {
   //   setImage(image);
   // };
@@ -67,6 +59,21 @@ export default function Admin({ ...rest }) {
   };
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    switch (user.role) {
+      case 1:
+        setRoutes(systemRoutes[0]);
+        break;
+
+      case 2:
+        setRoutes(systemRoutes[1]);
+        break;
+      default:
+        setRoutes(systemRoutes[0]);
+        break;
+    }
+
     if (navigator.platform.indexOf('Win') > -1) {
       ps = new PerfectScrollbar(mainPanel.current, {
         suppressScrollX: true,
@@ -83,6 +90,13 @@ export default function Admin({ ...rest }) {
       window.removeEventListener('resize', resizeFunction);
     };
   }, [mainPanel]);
+  const switchRoutes = (
+    <Switch>
+      {routes.map((prop, key) => {
+        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
+      })}
+    </Switch>
+  );
   return (
     <div className={classes.wrapper}>
       <Sidebar

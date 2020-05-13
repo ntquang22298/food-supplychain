@@ -1,12 +1,12 @@
 // @material-ui/icons
-// import Dashboard from '@material-ui/icons/Dashboard';
+import Dashboard from '@material-ui/icons/Dashboard';
 import Person from '@material-ui/icons/Person';
 import Spa from '@material-ui/icons/Spa';
 // import BubbleChart from '@material-ui/icons/BubbleChart';
 // import LocationOn from '@material-ui/icons/LocationOn';
 // import Notifications from '@material-ui/icons/Notifications';
 // core components/views for Admin layout
-// import DashboardPage from 'views/Dashboard/Dashboard.js';
+import DashboardPage from 'views/Dashboard/Dashboard.js';
 // import UserProfile from 'views/UserProfile/UserProfile.js';
 // import Typography from 'views/Typography/Typography.js';
 // import Icons from 'views/Icons/Icons.js';
@@ -14,14 +14,16 @@ import Spa from '@material-ui/icons/Spa';
 // import NotificationsPage from 'views/Notifications/Notifications.js';
 import Farmer from 'views/Farmer/Farmer';
 import Product from 'views/Product/Product';
+import Season from 'views/Season/Season';
+
 const dashboardRoutes = [
-  // {
-  //   path: '/dashboard',
-  //   name: 'Dashboard',
-  //   icon: Dashboard,
-  //   component: DashboardPage,
-  //   layout: '/admin'
-  // },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    icon: Dashboard,
+    component: DashboardPage,
+    layout: ''
+  },
   {
     path: '/farmer',
     name: 'Farmer',
@@ -72,5 +74,22 @@ const dashboardRoutes = [
   //   layout: '/admin'
   // }
 ];
+const farmerRoutes = [
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    icon: Dashboard,
+    component: DashboardPage,
+    layout: ''
+  },
+  {
+    path: '/season',
+    name: 'Season',
+    icon: Spa,
+    component: Season,
+    layout: '/farmer'
+  }
+];
+const systemRoutes = [dashboardRoutes, farmerRoutes];
 
-export default dashboardRoutes;
+export default systemRoutes;

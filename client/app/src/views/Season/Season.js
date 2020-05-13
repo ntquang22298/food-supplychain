@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import * as action from 'actions/producer.actions';
+import * as action from 'actions/farmer.actions';
+import * as producerAction from 'actions/producer.actions';
+
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import storage from 'config/storage';
@@ -32,11 +34,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import WorkIcon from '@material-ui/icons/Work';
+import InputLabel from '@material-ui/core/InputLabel';
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
     '&,& a,& a:hover,& a:focus': {
@@ -90,9 +91,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Product() {
+export default function Season() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const farmer = useSelector((state) => state.farmer);
   const producer = useSelector((state) => state.producer);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -102,24 +104,22 @@ export default function Product() {
   const [deleteAlert, setDeleteAlert] = React.useState(false);
   const [id, setId] = React.useState('');
   const [detailDialog, setDetailDialog] = React.useState(false);
-  // const [selectedFile, setSelectedFile] = React.useState(null);
-  const [preview, setPreview] = React.useState(null);
-  const initProduct = {
+  const [product, setProduct] = React.useState('');
+  const initSeason = {
     id: '',
-    imageUrl: '',
     name: '',
-    type: '',
-    origin: '',
-    description: ''
+    sowingDate: '',
+    harvestDate: '',
+    productId: ''
   };
-  const [product, setProduct] = React.useState(initProduct);
+  const [season, setSeason] = React.useState(initSeason);
   useEffect(() => {
-    dispatch(action.getAllProduct());
-    dispatch(action.getAllFarmer());
+    dispatch(action.getAllSeason());
+    dispatch(producerAction.getAllProduct());
   }, [dispatch]);
   const columns = [
     { id: 'name', label: 'Name' },
-    { id: 'origin', label: 'Origin' }
+    { id: 'productId', label: 'Product' }
   ];
 
   // open dialog when user click create button
@@ -134,16 +134,8 @@ export default function Product() {
   const handelEditOpen = (e, row) => {
     e.stopPropagation();
     setDialog('edit');
-    setPreview('');
 
-    setProduct({
-      id: row.id,
-      imageUrl: row.imageUrl,
-      name: row.name,
-      type: row.type,
-      origin: row.origin,
-      description: row.description
-    });
+    setSeason(row);
     setOpen(true);
   };
   /**
@@ -151,36 +143,35 @@ export default function Product() {
    * clear input data
    **/
   const handleClose = () => {
-    setPreview('');
-    setProduct(initProduct);
+    setSeason(initSeason);
     setOpen(false);
     setDetailDialog(false);
+    setProduct('');
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setProduct({ ...product, [name]: value });
+    setSeason({ ...season, [name]: value });
   };
 
-  //create a product
+  //create a season
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    product.imageUrl = preview;
-
-    setProduct(product);
-    await dispatch(action.createProduct(product));
+    season.productId = product;
+    setSeason(season);
+    await dispatch(action.createSeason(season));
+    setProduct('');
     setLoading(false);
     handleClose();
   };
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    product.imageUrl = preview !== '' ? preview : product.imageUrl;
-    console.log(product);
-
-    setProduct(product);
-    await dispatch(action.editProduct(product.id, product));
+    season.productId = product;
+    setSeason(season);
+    await dispatch(action.editSeason(season.id, season));
+    setProduct('');
     setLoading(false);
     handleClose();
   };
@@ -193,62 +184,35 @@ export default function Product() {
   const handleDelete = async () => {
     setLoading(true);
 
-    await dispatch(action.deleteProduct(id));
+    await dispatch(action.deleteSeason(id));
     setLoading(false);
     setDeleteAlert(false);
   };
   const showDetail = async (e, row) => {
     e.stopPropagation();
-    setPreview('');
-    setProduct(row);
+    setSeason(row);
     setDetailDialog(true);
   };
-  const fileChangedHandler = (e) => {
-    setLoading(true);
-    var file = e.target.files[0];
-    var uploadTask = storage.ref('/farmers/' + file.name).put(file);
-    uploadTask.on(
-      'state_changed',
-      (snapShot) => {
-        //takes a snap shot of the process as it is happening
-        console.log(snapShot);
-      },
-      (err) => {
-        //catches the errors
-        console.log(err);
-      },
-      () => {
-        // gets the functions from storage refences the image storage in firebase by the children
-        // gets the download url then sets the image from firebase as the value for the imgUrl key:
-        storage
-          .ref('farmers')
-          .child(file.name)
-          .getDownloadURL()
-          .then((fireBaseUrl) => {
-            setPreview(fireBaseUrl);
-          });
-      }
-    );
-
-    setLoading(false);
+  const handleSelect = (event) => {
+    setProduct(event.target.value);
   };
 
   return (
     <div>
       <ToastContainer autoClose={2000} />
-      {/*Product Table*/}
+      {/*Season Table*/}
       <Card>
         <CardHeader color='success'>
           <CardIcon color='info' onClick={() => handleCreateOpen()}>
             <Icon>add_circle</Icon>
           </CardIcon>
-          <h4 className={classes.cardTitleWhite}>Product List</h4>
+          <h4 className={classes.cardTitleWhite}>Season List</h4>
         </CardHeader>
         <CardBody>
           <Table
             tableHeaderColor='info'
             columns={columns}
-            tableData={producer.productList ? producer.productList : []}
+            tableData={farmer.seasonList ? farmer.seasonList : []}
             handelEdit={handelEditOpen}
             handelDelete={handleShowAlert}
             showDetail={showDetail}
@@ -268,31 +232,10 @@ export default function Product() {
           <CircularProgress color='inherit' />
         </Backdrop>
         <DialogTitle id='responsive-dialog-title'>
-          {dialog === 'create' ? 'Create Product' : 'Edit Product'}
+          {dialog === 'create' ? 'Create Season' : 'Edit Season'}
         </DialogTitle>
         <DialogContent>
           <form>
-            <div style={{ textAlign: 'center' }}>
-              <input
-                accept='image/*'
-                className={classes.input}
-                id='icon-button-file'
-                type='file'
-                onChange={fileChangedHandler}
-              />
-
-              <label htmlFor='icon-button-file'>
-                <IconButton color='primary' aria-label='upload picture' component='span'>
-                  <Avatar
-                    src={preview !== '' ? preview : product.imageUrl}
-                    style={{
-                      width: '130px',
-                      height: '130px'
-                    }}
-                  />
-                </IconButton>
-              </label>
-            </div>
             <TextField
               autoFocus
               margin='dense'
@@ -300,41 +243,24 @@ export default function Product() {
               label='Name'
               type='text'
               fullWidth
-              value={product.name}
+              value={season.name}
               onChange={handleChange}
               name='name'
             />
-            <TextField
-              margin='dense'
-              id='type'
-              label='Type'
-              type='type'
+            <InputLabel id='demo-simple-select-label'>Product</InputLabel>
+            <Select
               fullWidth
-              value={product.type}
-              onChange={handleChange}
-              name='type'
-            />
-
-            <TextField
-              margin='dense'
-              id='origin'
-              label='Origin'
-              type='text'
-              fullWidth
-              value={product.origin}
-              onChange={handleChange}
-              name='origin'
-            />
-            <TextField
-              id='standard-multiline-static'
-              label='Description'
-              multiline
-              rows={12}
-              fullWidth
-              value={product.description}
-              onChange={handleChange}
-              name='description'
-            />
+              labelId='demo-simple-select-label'
+              id='demo-simple-select'
+              value={product}
+              onChange={handleSelect}
+            >
+              {producer.productList.map((value, index) => (
+                <MenuItem key={index} value={value.id}>
+                  {value.name}
+                </MenuItem>
+              ))}
+            </Select>
           </form>
         </DialogContent>
         <DialogActions>
@@ -350,71 +276,7 @@ export default function Product() {
           </Button>
         </DialogActions>
       </Dialog>
-      {/*Detail dialog*/}
-      <Dialog
-        fullWidth
-        fullScreen={fullScreen}
-        open={detailDialog}
-        scroll='body'
-        onClose={handleClose}
-        aria-labelledby='form-dialog-title'
-      >
-        <Backdrop className={classes.backdrop} open={loading}>
-          <CircularProgress color='inherit' />
-        </Backdrop>
-        <DialogTitle id='responsive-dialog-title'>Product detail</DialogTitle>
-        <DialogContent>
-          <Avatar
-            src={preview !== '' ? preview : product.imageUrl}
-            style={{
-              margin: 'auto',
-              width: '130px',
-              height: '130px'
-            }}
-          />
-          <div className={classes.detail}>
-            <List className={classes.wrap}>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <ImageIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary='Name' secondary={product.name} />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary='Type' secondary={product.type} />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary='Origin' secondary={product.origin} />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary='Description' secondary={product.description} />
-              </ListItem>
-            </List>
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color='primary'>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+
       {/**Delete Alert Dialog */}
       <Dialog
         open={deleteAlert}

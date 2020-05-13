@@ -18,14 +18,8 @@ router.post("/", async function(req, res) {
             imageUrl: req.body.imageUrl,
             name: req.body.name,
             type: req.body.type,
-            packtype: "",
-            weight: "",
-            mfgDate: "",
-            expDate: "",
             origin: req.body.origin,
-            description: req.body.description,
-            growId: "",
-            farmerId: req.body.farmerId
+            description: req.body.description
         };
 
         let tx = await contract.submitTransaction(
@@ -81,8 +75,7 @@ router.put("/:id", async function(req, res) {
             name: req.body.name,
             type: req.body.type,
             origin: req.body.origin,
-            description: req.body.description,
-            farmerId: req.body.farmerId
+            description: req.body.description
         };
         const result = await contract.submitTransaction(
             "editAsset",
@@ -149,6 +142,31 @@ router.get("/", async function(req, res) {
             "Product"
         );
         let response = JSON.parse(result.toString());
+        res.json({ products: response });
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        res.status(500).json({
+            error: error
+        });
+    }
+});
+
+router.get("/farmer/:username", async function(req, res) {
+    try {
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-producer.json",
+            "wallet/wallet-producer",
+            process.env.ADMIN_PRODUCER_USERNAME
+        );
+        const result = await contract.evaluateTransaction(
+            "queryAllAssetByAttribute",
+            "Product",
+            "username",
+            req.params.username.toString()
+        );
+        let response = JSON.parse(result.toString());
+        console.log(response);
+
         res.json({ products: response });
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);

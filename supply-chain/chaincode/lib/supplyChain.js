@@ -59,6 +59,52 @@ class SypplyChain extends Contract {
             }
         }
     }
+
+    // lấy danh sách đối tượng có thuộc tính = input
+    async queryAllAssetByAttribute(ctx, entity, attribute, attributeId) {
+        console.info(
+            "============= START : Query asset by attribute==========="
+        );
+        console.log("attribute" + attribute);
+        console.log("attributeId" + attributeId);
+
+        const startKey = "";
+        const endKey = "zzzzzzzz";
+
+        const iterator = await ctx.stub.getStateByRange(
+            entity + startKey,
+            entity + endKey
+        );
+
+        const allResults = [];
+        while (true) {
+            const res = await iterator.next();
+
+            if (res.value && res.value.value.toString()) {
+                console.log(res.value.value.toString("utf8"));
+                let Record;
+                try {
+                    Record = JSON.parse(res.value.value.toString("utf8"));
+                    console.log(Record);
+                } catch (err) {
+                    console.log(err);
+                    Record = res.value.value.toString("utf8");
+                }
+                console.log("Record" + Record);
+
+                console.log(Record[attribute]);
+
+                if (Record[attribute] == attributeId) allResults.push(Record);
+            }
+            if (res.done) {
+                console.log("end of data");
+                await iterator.close();
+                console.info(allResults);
+                return allResults;
+            }
+        }
+    }
+
     async editAsset(ctx, assetId, newAsset) {
         console.info("============= START : editAsset ===========");
 

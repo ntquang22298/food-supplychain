@@ -11,7 +11,8 @@ export const producer = {
   EDIT_PRODUCT: 'EDIT_PRODUCT',
   GET_PRODUCT: 'GET_PRODUCT',
   GET_ALL_PRODUCT: 'GET_ALL_PRODUCT',
-  DELETE_PRODUCT: 'DELETE_PRODUCT'
+  DELETE_PRODUCT: 'DELETE_PRODUCT',
+  GET_ALL_PRODUCT_BY_FARMER: 'GET_ALL_PRODUCT_BY_FARMER'
 };
 // start Farmer
 export const createFarmer = (farmer) => async (dispatch) => {
@@ -144,5 +145,18 @@ export const getProduct = (id) => async (dispatch) => {
     });
   } catch (error) {
     console.log('get farmer error');
+  }
+};
+
+export const getAllProductByFarmer = (farmerUsername) => async (dispatch) => {
+  try {
+    let res = await producerService.getAllProductByFarmer(farmerUsername);
+
+    dispatch({
+      type: producer.GET_ALL_PRODUCT_BY_FARMER,
+      productListOfFarmer: res
+    });
+  } catch (e) {
+    console.log('get all product error' + e);
   }
 };

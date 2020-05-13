@@ -4,7 +4,8 @@ const initialState = {
   farmer: null,
   farmerList: [],
   product: null,
-  productList: []
+  productList: [],
+  productListOfFarmer: []
 };
 
 const ProducerReducer = (state = initialState, action) => {
@@ -58,6 +59,11 @@ const ProducerReducer = (state = initialState, action) => {
       return {
         ...state,
         product: action.product
+      };
+    case actions.producer.GET_ALL_PRODUCT_BY_FARMER:
+      return {
+        ...state,
+        productListOfFarmer: action.productListOfFarmer
       };
     default:
       return state;

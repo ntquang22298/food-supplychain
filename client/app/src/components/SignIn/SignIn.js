@@ -63,7 +63,7 @@ export default function SignInSide() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await dispatch(actions.signIn(state.username, state.password));
-    if (localStorage.getItem('user')) history.push('/');
+    if (localStorage.getItem('user')) history.push('/dashboard');
   };
   return (
     <Grid container component='main' className={classes.root}>
