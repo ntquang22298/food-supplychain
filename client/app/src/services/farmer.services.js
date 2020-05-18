@@ -5,7 +5,9 @@ export const farmerService = {
   getSeason,
   getAllSeason,
   editSeason,
-  deleteSeason
+  deleteSeason,
+  createAction,
+  getAllAction
 };
 //------------Season-----------------------------------------------------------------------//
 // create a season
@@ -70,10 +72,10 @@ async function deleteSeason(seasonId) {
 // get a season by Id
 async function getSeason(seasonId) {
   try {
-    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/season/${seasonId}`, {
+    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/season/${seasonId}`, {
       headers: authHeader()
     });
-    return respone.data.season;
+    return respone.data.result;
   } catch (error) {
     throw error;
   }
@@ -92,3 +94,37 @@ async function getAllSeason() {
   }
 }
 //-----------------------------------------------------Season-------------------------------------------//
+
+async function createAction(action) {
+  try {
+    let respone = await axios.post(
+      `${process.env.REACT_APP_API_BACKEND}/action`,
+
+      {
+        imgUrl: action.imgUrl,
+        action: action.action,
+        time: action.time,
+        description: action.description,
+        seasonId: action.seasonId
+      },
+      {
+        headers: authHeader()
+      }
+    );
+    return respone.data.action;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getAllAction(seasonId) {
+  try {
+    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/actions/${seasonId}`, {
+      headers: authHeader()
+    });
+
+    return respone.data.actions;
+  } catch (error) {
+    throw error;
+  }
+}

@@ -75,7 +75,7 @@ async function deleteFarmer(farmerId) {
 // get a farmer by Id
 async function getFarmer(farmerId) {
   try {
-    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/farmer/${farmerId}`, {
+    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/farmer/${farmerId}`, {
       headers: authHeader()
     });
     return respone.data.farmer;
@@ -90,6 +90,7 @@ async function getAllFarmer() {
     let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/farmer`, {
       headers: authHeader()
     });
+    console.log(respone);
 
     return respone.data.farmers;
   } catch (error) {
@@ -154,10 +155,12 @@ async function getAllProduct() {
 }
 async function getProduct(productId) {
   try {
-    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/product/${productId}`, {
-      headers: authHeader()
-    });
-    console.log(respone.data.product);
+    let respone = await axios.get(
+      `${process.env.REACT_APP_API_BACKEND}/info/product/${productId}`,
+      {
+        headers: authHeader()
+      }
+    );
 
     return respone.data.product;
   } catch (error) {

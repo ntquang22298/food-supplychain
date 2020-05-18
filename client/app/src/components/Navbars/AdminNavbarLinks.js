@@ -179,7 +179,7 @@ export default function AdminNavbarLinks() {
                     </MenuItem>
                     <Divider light />
                     <MenuItem onClick={handleCloseProfile} className={classes.dropdownItem}>
-                      <Link to='/signin'>Sign out</Link>
+                      <Link to='/signIn'>Log out</Link>
                     </MenuItem>
                   </MenuList>
                 </ClickAwayListener>

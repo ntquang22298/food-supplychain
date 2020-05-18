@@ -5,6 +5,7 @@ import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
+import Action from '../views/Action/Action';
 // core components
 import Navbar from 'components/Navbars/Navbar.js';
 import Footer from 'components/Footer/Footer.js';
@@ -92,9 +93,10 @@ export default function Admin({ ...rest }) {
   }, [mainPanel]);
   const switchRoutes = (
     <Switch>
-      {routes.map((prop, key) => {
-        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
-      })}
+      {routes.map((prop, key) => (
+        <Route path={prop.layout + prop.path} component={prop.component} key={key} />
+      ))}
+      <Route path='/season/:id' component={Action} />
     </Switch>
   );
   return (

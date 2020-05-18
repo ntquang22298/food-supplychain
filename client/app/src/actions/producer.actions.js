@@ -78,6 +78,7 @@ export const getFarmer = (id) => async (dispatch) => {
     console.log('get farmer error');
   }
 };
+
 //end Farmer
 
 //start product
@@ -144,7 +145,7 @@ export const getProduct = (id) => async (dispatch) => {
       product: res
     });
   } catch (error) {
-    console.log('get farmer error');
+    console.log('get product error');
   }
 };
 

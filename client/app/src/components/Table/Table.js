@@ -60,7 +60,9 @@ export default function CustomTable(props) {
               <TableRow
                 key={row.id}
                 className={classes.tableBodyRow}
-                onClick={(e) => props.showDetail(e, row)}
+                onClick={(e) => {
+                  props.showDetail ? props.showDetail(e, row) : props.view(e, row);
+                }}
               >
                 {columns.map((column) => {
                   const value = row[column.id];

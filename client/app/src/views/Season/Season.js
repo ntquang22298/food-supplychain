@@ -3,10 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import * as action from 'actions/farmer.actions';
 import * as producerAction from 'actions/producer.actions';
-
+import { useHistory } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import storage from 'config/storage';
 
 // core components
 
@@ -22,21 +21,13 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ImageIcon from '@material-ui/icons/Image';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import WorkIcon from '@material-ui/icons/Work';
 import InputLabel from '@material-ui/core/InputLabel';
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
@@ -97,13 +88,13 @@ export default function Season() {
   const farmer = useSelector((state) => state.farmer);
   const producer = useSelector((state) => state.producer);
   const theme = useTheme();
+  const history = useHistory();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [open, setOpen] = React.useState(false);
   const [dialog, setDialog] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [deleteAlert, setDeleteAlert] = React.useState(false);
   const [id, setId] = React.useState('');
-  const [detailDialog, setDetailDialog] = React.useState(false);
   const [product, setProduct] = React.useState('');
   const initSeason = {
     id: '',
@@ -145,7 +136,6 @@ export default function Season() {
   const handleClose = () => {
     setSeason(initSeason);
     setOpen(false);
-    setDetailDialog(false);
     setProduct('');
   };
   const handleChange = (e) => {
@@ -190,8 +180,7 @@ export default function Season() {
   };
   const showDetail = async (e, row) => {
     e.stopPropagation();
-    setSeason(row);
-    setDetailDialog(true);
+    history.push('/season/' + row.id);
   };
   const handleSelect = (event) => {
     setProduct(event.target.value);
@@ -215,7 +204,7 @@ export default function Season() {
             tableData={farmer.seasonList ? farmer.seasonList : []}
             handelEdit={handelEditOpen}
             handelDelete={handleShowAlert}
-            showDetail={showDetail}
+            view={showDetail}
           />
         </CardBody>
       </Card>

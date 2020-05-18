@@ -2,7 +2,9 @@ import * as actions from 'actions/farmer.actions.js';
 
 const initialState = {
   season: null,
-  seasonList: []
+  seasonList: [],
+  action: null,
+  actionList: []
 };
 
 const FarmerReducer = (state = initialState, action) => {
@@ -31,6 +33,16 @@ const FarmerReducer = (state = initialState, action) => {
       return {
         ...state,
         season: action.season
+      };
+    case actions.farmer.CREATE_ACTION:
+      return {
+        ...state,
+        action: action.action
+      };
+    case actions.farmer.GET_ALL_ACTION:
+      return {
+        ...state,
+        actionList: action.actionList
       };
     default:
       return state;

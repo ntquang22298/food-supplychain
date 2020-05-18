@@ -1,12 +1,14 @@
 import { farmerService } from 'services/farmer.services.js';
 import { toast } from 'react-toastify';
-
+import * as producerAction from './producer.actions';
 export const farmer = {
   CEATE_SEASON: 'CREATE_SEASON',
   GET_ALL_SEASON: 'GET_ALL_SEASON',
   GET_SEASON: 'GET_SEASON',
   EDIT_SEASON: 'EDIT_SEASON',
-  DELETE_SEASON: 'DELETE_SEASON'
+  DELETE_SEASON: 'DELETE_SEASON',
+  CREATE_ACTION: 'CREATE_ACTION',
+  GET_ALL_ACTION: 'GET_ALL_ACTION'
 };
 // start Season
 export const createSeason = (season) => async (dispatch) => {
@@ -14,11 +16,11 @@ export const createSeason = (season) => async (dispatch) => {
     let res = await farmerService.createSeason(season);
     dispatch({
       type: farmer.CEATE_SEASON,
-      farmer: res
+      season: res
     });
-    toast.success('Season created successfully!');
-
     dispatch(getAllSeason());
+
+    toast.success('Season created successfully!');
   } catch (error) {
     console.log('create season error');
   }
@@ -41,7 +43,7 @@ export const deleteSeason = (id) => async (dispatch) => {
 
     dispatch({
       type: farmer.DELETE_SEASON,
-      farmer: res
+      season: res
     });
     dispatch(getAllSeason());
     toast.success('Season has been removed');
@@ -61,15 +63,45 @@ export const getAllSeason = () => async (dispatch) => {
   }
 };
 
-// export const getSeason = (id) => async (dispatch) => {
-//   try {
-//     let res = await farmerService.getSeason(id);
-//     dispatch({
-//       type: farmer.GET_SEASON,
-//       farmer: res
-//     });
-//   } catch (error) {
-//     console.log('get farmer error');
-//   }
-// };
+export const getSeason = (id) => async (dispatch) => {
+  try {
+    let res = await farmerService.getSeason(id);
+    dispatch({
+      type: farmer.GET_SEASON,
+      season: res
+    });
+    dispatch(producerAction.getProduct(res.productId));
+    dispatch(getAllAction(res.id));
+  } catch (error) {
+    console.log('get season error');
+  }
+};
 //end Season
+
+//start Action
+
+export const createAction = (action) => async (dispatch) => {
+  try {
+    let res = await farmerService.createAction(action);
+    dispatch({
+      type: farmer.CREATE_ACTION,
+      action: res
+    });
+    dispatch(getAllAction(action.seasonId));
+    // dispatch(getAllAction(action.seasonId));
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getAllAction = (seasonId) => async (dispatch) => {
+  try {
+    let res = await farmerService.getAllAction(seasonId);
+
+    dispatch({
+      type: farmer.GET_ALL_ACTION,
+      actionList: res
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

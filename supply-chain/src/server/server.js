@@ -37,12 +37,16 @@ const authRoutes = require("./routes/auth");
 const farmerRoutes = require("./routes/farmer");
 const productRoutes = require("./routes/product");
 const seasonRoutes = require("./routes/season");
+const actionRoutes = require("./routes/action");
+const infoRoutes = require("./routes/info");
 app.use("/auth", authRoutes);
 app.use("/farmer", checkJWT, farmerRoutes);
 app.use("/product", checkJWT, productRoutes);
 app.use("/season", checkJWT, seasonRoutes);
+app.use("/action", checkJWT, actionRoutes);
+app.use("/info", infoRoutes);
 
-app.listen(3000, () => {
+app.listen(8080, () => {
     console.log("***********************************");
     console.log("API server listening at localhost:3000");
     console.log("***********************************");

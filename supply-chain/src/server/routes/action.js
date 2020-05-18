@@ -24,21 +24,21 @@ router.post("/", async function(req, res) {
             req.decoded.user.username
         );
 
-        let season = {
-            id: "Season" + uuidv4(),
-            name: req.body.name,
-            sowingDate: req.body.sowingDate,
-            harvestDate: req.body.harvestDate,
-            productId: req.body.productId,
-            farmer: req.decoded.user.username
+        let action = {
+            id: "Action" + uuidv4(),
+            imgUrl: req.body.imgUrl,
+            action: req.body.action,
+            time: req.body.time,
+            description: req.body.description,
+            seasonId: req.body.seasonId
         };
         let tx = await contract.submitTransaction(
             "addAsset",
-            JSON.stringify(season)
+            JSON.stringify(action)
         );
 
         res.json({
-            status: "Create Season successful!",
+            status: "Create Action successful!",
             txid: tx.toString()
         });
     } catch (error) {
@@ -48,6 +48,29 @@ router.post("/", async function(req, res) {
         });
     }
 });
+
+// router.get("/:id", async function(req, res) {
+//     try {
+//         console.log(req);
+
+//         const contract = await fabricNetwork.connectNetwork(
+//             "connection-producer.json",
+//             "wallet/wallet-producer",
+//             process.env.ADMIN_PRODUCER_USERNAME
+//         );
+//         const result = await contract.evaluateTransaction(
+//             "queryAsset",
+//             req.params.id.toString()
+//         );
+//         let response = JSON.parse(result.toString());
+//         res.json({ result: response });
+//     } catch (error) {
+//         console.error(`Failed to evaluate transaction: ${error}`);
+//         res.status(500).json({
+//             error: error
+//         });
+//     }
+// });
 
 router.put("/:id", async function(req, res) {
     try {
@@ -59,7 +82,7 @@ router.put("/:id", async function(req, res) {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
             "wallet/wallet-producer",
-            req.decoded.user.username
+            process.env.ADMIN_PRODUCER_USERNAME
         );
         let season = {
             id: req.params.id.toString(),
@@ -67,7 +90,7 @@ router.put("/:id", async function(req, res) {
             sowingDate: req.body.sowingDate,
             harvestDate: req.body.harvestDate,
             productId: req.body.productId,
-            farmerId: req.body.farmerId
+            seasonUsername: req.decoded.user.username
         };
         const result = await contract.submitTransaction(
             "editAsset",
@@ -76,7 +99,7 @@ router.put("/:id", async function(req, res) {
         );
 
         res.json({
-            status: "Edit Season successful!",
+            status: "Edit Farmer successful!",
             txid: result.toString()
         });
     } catch (error) {
@@ -102,7 +125,7 @@ router.delete(
             const contract = await fabricNetwork.connectNetwork(
                 "connection-producer.json",
                 "wallet/wallet-producer",
-                req.decoded.user.username
+                process.env.ADMIN_PRODUCER_USERNAME
             );
             const result = await contract.submitTransaction(
                 "deleteAsset",
@@ -121,26 +144,5 @@ router.delete(
         }
     }
 );
-router.get("/", async function(req, res) {
-    try {
-        const contract = await fabricNetwork.connectNetwork(
-            "connection-producer.json",
-            "wallet/wallet-producer",
-            process.env.ADMIN_PRODUCER_USERNAME
-        );
-        const result = await contract.evaluateTransaction(
-            "queryAllAssetByAttribute",
-            "Season",
-            "farmer",
-            req.decoded.user.username
-        );
-        let response = JSON.parse(result.toString());
-        res.json({ seasons: response });
-    } catch (error) {
-        console.error(`Failed to evaluate transaction: ${error}`);
-        res.status(500).json({
-            error: error
-        });
-    }
-});
+
 module.exports = router;
