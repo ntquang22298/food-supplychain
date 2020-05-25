@@ -48,7 +48,7 @@ app.use("/info", infoRoutes);
 
 app.listen(8080, () => {
     console.log("***********************************");
-    console.log("API server listening at localhost:3000");
+    console.log("API server listening at localhost:8080");
     console.log("***********************************");
 });
 module.exports = app;

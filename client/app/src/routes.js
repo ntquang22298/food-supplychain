@@ -15,6 +15,7 @@ import DashboardPage from 'views/Dashboard/Dashboard.js';
 import Farmer from 'views/Farmer/Farmer';
 import Product from 'views/Product/Product';
 import Season from 'views/Season/Season';
+import UserProfile from 'views/FarmerProfile/Profile';
 
 const dashboardRoutes = [
   {
@@ -88,6 +89,13 @@ const farmerRoutes = [
     icon: Spa,
     component: Season,
     layout: '/farmer'
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    icon: Person,
+    component: UserProfile,
+    layout: ''
   }
 ];
 const systemRoutes = [dashboardRoutes, farmerRoutes];

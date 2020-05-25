@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as action from 'actions/producer.actions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import storage from 'config/storage';
+import 'firebase/storage';
+import firebase from 'config/firebase';
 // core components
 
 import Table from 'components/Table/Table.js';
@@ -86,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Farmer() {
+  const storage = firebase.storage();
   const classes = useStyles();
   const dispatch = useDispatch();
   const producer = useSelector((state) => state.producer);
@@ -134,7 +136,8 @@ export default function Farmer() {
       name: row.name,
       address: row.address,
       description: row.description,
-      imageUrl: row.imageUrl
+      imageUrl: row.imageUrl,
+      username: row.username
     });
     setOpen(true);
   };

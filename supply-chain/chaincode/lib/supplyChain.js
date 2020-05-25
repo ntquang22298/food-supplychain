@@ -161,8 +161,10 @@ class SypplyChain extends Contract {
                         "utf8"
                     )}`
                 );
-                const obj = JSON.parse(res.value.value.toString("utf8"));
-                result.push(obj);
+                const value = JSON.parse(res.value.value.toString("utf8"));
+                const key = JSON.parse(res.value.key.toString("utf8"));
+
+                result.push({ key, value });
             }
             res = await iterator.next();
         }

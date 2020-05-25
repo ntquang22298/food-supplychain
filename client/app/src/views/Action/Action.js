@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import * as actions from 'actions/farmer.actions';
-import storage from 'config/storage';
+import firebase from 'config/firebase';
+import 'firebase/storage';
 import { QRCode } from 'react-qrcode-logo';
 import logo from 'assets/img/logo.png';
 
@@ -75,10 +76,12 @@ const useStyles = makeStyles((theme) => ({
   },
   img: {
     maxWidth: '100%',
-    maxHeight: 'auto'
+    maxHeight: 'auto',
+    borderRadius: '5px'
   }
 }));
 export default function Action({ match }) {
+  const storage = firebase.storage();
   const classes = useStyles();
   const dispatch = useDispatch();
   const producer = useSelector((state) => state.producer);
@@ -229,7 +232,7 @@ export default function Action({ match }) {
         </CardHeader>
         <CardBody>
           <Grid container className={classes.root}>
-            <Grid item md={6} style={{ textAlign: 'center' }}>
+            <Grid item md={6} style={{ textAlign: 'center', verticalAlign: 'center' }}>
               <img
                 className={classes.img}
                 src={producer.product ? producer.product.imageUrl : ''}
@@ -346,7 +349,7 @@ export default function Action({ match }) {
 
               <label htmlFor='icon-button-file'>
                 <IconButton color='primary' aria-label='upload picture' component='span'>
-                  <img
+                  <Avatar
                     src={preview !== '' ? preview : action.imgUrl}
                     style={{
                       width: '200px',

@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as action from 'actions/producer.actions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import storage from 'config/storage';
+import 'firebase/storage';
+import firebase from 'config/firebase';
 
 // core components
 
@@ -88,6 +89,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Product() {
+  const storage = firebase.storage();
   const classes = useStyles();
   const dispatch = useDispatch();
   const producer = useSelector((state) => state.producer);
@@ -203,7 +205,7 @@ export default function Product() {
   const fileChangedHandler = (e) => {
     setLoading(true);
     var file = e.target.files[0];
-    var uploadTask = storage.ref('/farmers/' + file.name).put(file);
+    var uploadTask = storage.ref('/products/' + file.name).put(file);
     uploadTask.on(
       'state_changed',
       (snapShot) => {
@@ -218,7 +220,7 @@ export default function Product() {
         // gets the functions from storage refences the image storage in firebase by the children
         // gets the download url then sets the image from firebase as the value for the imgUrl key:
         storage
-          .ref('farmers')
+          .ref('products')
           .child(file.name)
           .getDownloadURL()
           .then((fireBaseUrl) => {

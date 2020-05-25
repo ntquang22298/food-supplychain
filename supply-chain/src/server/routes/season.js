@@ -32,6 +32,7 @@ router.post("/", async function(req, res) {
             productId: req.body.productId,
             farmer: req.decoded.user.username
         };
+
         let tx = await contract.submitTransaction(
             "addAsset",
             JSON.stringify(season)
@@ -67,8 +68,9 @@ router.put("/:id", async function(req, res) {
             sowingDate: req.body.sowingDate,
             harvestDate: req.body.harvestDate,
             productId: req.body.productId,
-            farmerId: req.body.farmerId
+            farmer: req.decoded.user.username
         };
+
         const result = await contract.submitTransaction(
             "editAsset",
             season.id.toString(),

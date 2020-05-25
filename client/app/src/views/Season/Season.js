@@ -29,6 +29,7 @@ import { useTheme } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
+import { Avatar } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
     '&,& a,& a:hover,& a:focus': {
@@ -125,7 +126,7 @@ export default function Season() {
   const handelEditOpen = (e, row) => {
     e.stopPropagation();
     setDialog('edit');
-
+    setProduct(row.productId);
     setSeason(row);
     setOpen(true);
   };
@@ -148,7 +149,7 @@ export default function Season() {
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    season.productId = product;
+    season.productId = product.id;
     setSeason(season);
     await dispatch(action.createSeason(season));
     setProduct('');
@@ -158,7 +159,7 @@ export default function Season() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    season.productId = product;
+    season.productId = product.id;
     setSeason(season);
     await dispatch(action.editSeason(season.id, season));
     setProduct('');
@@ -211,6 +212,7 @@ export default function Season() {
 
       {/*Create and Edit dialog*/}
       <Dialog
+        fullWidth='true'
         fullScreen={fullScreen}
         open={open}
         scroll='paper'
@@ -224,6 +226,17 @@ export default function Season() {
           {dialog === 'create' ? 'Create Season' : 'Edit Season'}
         </DialogTitle>
         <DialogContent>
+          <div>
+            <Avatar
+              style={{
+                width: '130px',
+                height: '130px',
+                margin: 'auto'
+              }}
+              src={product ? product.imageUrl : ''}
+              alt='Product'
+            />
+          </div>
           <form>
             <TextField
               autoFocus
@@ -236,6 +249,7 @@ export default function Season() {
               onChange={handleChange}
               name='name'
             />
+
             <InputLabel id='demo-simple-select-label'>Product</InputLabel>
             <Select
               fullWidth
@@ -245,7 +259,7 @@ export default function Season() {
               onChange={handleSelect}
             >
               {producer.productList.map((value, index) => (
-                <MenuItem key={index} value={value.id}>
+                <MenuItem key={index} value={value}>
                   {value.name}
                 </MenuItem>
               ))}

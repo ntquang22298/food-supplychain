@@ -7,7 +7,6 @@ const path = require("path");
 async function connectNetwork(conn, walletOrg, IDENTITY) {
     const walletPath = path.join(process.cwd(), walletOrg);
     const wallet = new FileSystemWallet(walletPath);
-    console.log(`Wallet path: ${walletPath}`);
     const ccpPath = path.resolve(__dirname, "..", "..", "connections", conn);
     // Check to see if we've already enrolled the user.
     const userExists = await wallet.exists(IDENTITY);
