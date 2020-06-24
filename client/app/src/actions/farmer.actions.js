@@ -8,7 +8,12 @@ export const farmer = {
   EDIT_SEASON: 'EDIT_SEASON',
   DELETE_SEASON: 'DELETE_SEASON',
   CREATE_ACTION: 'CREATE_ACTION',
-  GET_ALL_ACTION: 'GET_ALL_ACTION'
+  GET_ALL_ACTION: 'GET_ALL_ACTION',
+  CEATE_CERTIFICATE: 'CREATE_CERTIFICATE',
+  GET_ALL_CERTIFICATE: 'GET_ALL_CERTIFICATE',
+  GET_CERTIFICATE: 'GET_CERTIFICATE',
+  EDIT_CERTIFICATE: 'EDIT_CERTIFICATE',
+  DELETE_CERTIFICATE: 'DELETE_CERTIFICATE'
 };
 // start Season
 export const createSeason = (season) => async (dispatch) => {
@@ -103,5 +108,58 @@ export const getAllAction = (seasonId) => async (dispatch) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+//certificate
+export const createCertificate = (certificate) => async (dispatch) => {
+  try {
+    let res = await farmerService.createCertificate(certificate);
+    dispatch({
+      type: farmer.CEATE_CERTIFICATE,
+      certificate: res
+    });
+    dispatch(getAllCertificate());
+
+    toast.success('Certificate created successfully!');
+  } catch (error) {
+    console.log('create certificate error');
+  }
+};
+export const editCertificate = (id, certificate) => async (dispatch) => {
+  try {
+    let res = await farmerService.editCertificate(id, certificate);
+    dispatch(getAllCertificate());
+    toast.success('Certificate has been edited!');
+
+    return res;
+  } catch (error) {
+    console.log('edit farmer error');
+  }
+};
+
+export const deleteCertificate = (id) => async (dispatch) => {
+  try {
+    let res = await farmerService.deleteCertificate(id);
+
+    dispatch({
+      type: farmer.DELETE_CERTIFICATE,
+      certificate: res
+    });
+    dispatch(getAllCertificate());
+    toast.success('Certificate has been removed');
+  } catch (error) {
+    console.log('delete farmer error');
+  }
+};
+export const getAllCertificate = () => async (dispatch) => {
+  try {
+    let res = await farmerService.getAllCertificate();
+    dispatch({
+      type: farmer.GET_ALL_CERTIFICATE,
+      certificateList: res
+    });
+  } catch (error) {
+    console.log('Can not get all certificate');
   }
 };

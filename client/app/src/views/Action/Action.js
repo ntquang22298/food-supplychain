@@ -15,7 +15,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import WorkIcon from '@material-ui/icons/Work';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import ClassIcon from '@material-ui/icons/Class';
+import DescriptionIcon from '@material-ui/icons/Description';
 import StarIcon from '@material-ui/icons/Star';
 import CardIcon from 'components/Card/CardIcon.js';
 import Icon from '@material-ui/core/Icon';
@@ -250,7 +252,7 @@ export default function Action({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
-                          <WorkIcon />
+                          <ClassIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
@@ -261,7 +263,7 @@ export default function Action({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
-                          <WorkIcon />
+                          <LocationOnIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
@@ -272,7 +274,7 @@ export default function Action({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
-                          <WorkIcon />
+                          <DescriptionIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
@@ -280,10 +282,12 @@ export default function Action({ match }) {
                         secondary={producer.product ? producer.product.description : ''}
                       />
                     </ListItem>
-                    <QRCode
-                      value={process.env.REACT_APP_API_FRONTEND + '/info/' + match.params.id}
-                      logoImage={logo}
-                    />
+                    <ListItem>
+                      <QRCode
+                        value={process.env.REACT_APP_API_FRONTEND + '/info/' + match.params.id}
+                        logoImage={logo}
+                      />
+                    </ListItem>
                   </List>
                 </div>
               </div>
@@ -300,7 +304,7 @@ export default function Action({ match }) {
                 className='vertical-timeline-element--work'
                 date={action.time}
                 iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-                icon={<WorkIcon />}
+                icon={<StarIcon />}
               >
                 <Typography variant='h6' className='vertical-timeline-element-title'>
                   {action.action}

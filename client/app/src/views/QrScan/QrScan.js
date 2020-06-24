@@ -18,6 +18,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import ClassIcon from '@material-ui/icons/Class';
+import DescriptionIcon from '@material-ui/icons/Description';
+import CertificateIcon from '@material-ui/icons/Book';
 
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
@@ -98,7 +102,7 @@ export default function QrScan({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
-                          <WorkIcon />
+                          <ClassIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
@@ -109,7 +113,7 @@ export default function QrScan({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
-                          <WorkIcon />
+                          <LocationOnIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
@@ -120,11 +124,22 @@ export default function QrScan({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
-                          <WorkIcon />
+                          <DescriptionIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary='Description'
+                        secondary={producer.product ? producer.product.description : ''}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <CertificateIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary='Certificate'
                         secondary={producer.product ? producer.product.description : ''}
                       />
                     </ListItem>

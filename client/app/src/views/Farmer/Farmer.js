@@ -31,8 +31,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
+import PersonIcon from '@material-ui/icons/Person';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import DescriptionIcon from '@material-ui/icons/Description';
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
     '&,& a,& a:hover,& a:focus': {
@@ -379,7 +380,7 @@ export default function Farmer() {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <ImageIcon />
+                    <PersonIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary='Name' secondary={farmer.name} />
@@ -387,7 +388,7 @@ export default function Farmer() {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <WorkIcon />
+                    <LocationOnIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary='Address' secondary={farmer.address} />
@@ -395,7 +396,7 @@ export default function Farmer() {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <WorkIcon />
+                    <DescriptionIcon />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary='Description' secondary={farmer.description} />

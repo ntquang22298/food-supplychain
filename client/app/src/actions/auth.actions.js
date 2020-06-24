@@ -1,18 +1,23 @@
 import { authService } from 'services/auth.services';
+import { toast } from 'react-toastify';
+
 export const auth = {
   LOGIN: 'LOGIN',
   LOGOUT: 'LOGOUT'
 };
 export const signIn = (username, password) => async (dispatch) => {
   try {
-    let user = await authService.signIn(username, password);
+    let res = await authService.signIn(username, password);
+
+    toast.success(res.msg);
     dispatch({
       type: auth.LOGIN,
       isAuthenticate: true,
-      user: user
+      user: res.user
     });
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 export const signOut = () => (dispatch) => {

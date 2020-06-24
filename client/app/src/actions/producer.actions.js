@@ -5,6 +5,7 @@ export const producer = {
   CEATE_FARMER: 'CREATE_FARMER',
   GET_ALL_FARMER: 'GET_ALL_FARMER',
   GET_FARMER: 'GET_FARMER',
+  GET_FARMER_BY_USERNAME: 'GET_FARMER_BY_USERNAME',
   EDIT_FARMER: 'EDIT_FARMER',
   DELETE_FARMER: 'DELETE_FARMER',
   CREAT_PRODUCT: 'CREATE_PRODUCT',
@@ -20,24 +21,26 @@ export const createFarmer = (farmer) => async (dispatch) => {
     let res = await producerService.createFarmer(farmer);
     dispatch({
       type: producer.CEATE_FARMER,
-      farmer: res
+      farmer: res.farmers
     });
-    toast.success('Farmer created successfully!');
 
+    toast.success(res.msg);
     dispatch(getAllFarmer());
   } catch (error) {
-    console.log('create farmer error');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 export const editFarmer = (id, farmer) => async (dispatch) => {
   try {
     let res = await producerService.editFarmer(id, farmer);
     dispatch(getAllFarmer());
-    toast.success('Farmer has been edited!');
+    toast.success(res.msg);
 
     return res;
   } catch (error) {
-    console.log('edit farmer error');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 
@@ -46,13 +49,13 @@ export const deleteFarmer = (id) => async (dispatch) => {
     let res = await producerService.deleteFarmer(id);
 
     dispatch({
-      type: producer.DELETE_FARMER,
-      farmer: res
+      type: producer.DELETE_FARMER
     });
     dispatch(getAllFarmer());
-    toast.success('Farmer has been removed');
+    toast.success(res.msg);
   } catch (error) {
-    console.log('delete farmer error');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 export const getAllFarmer = () => async (dispatch) => {
@@ -60,10 +63,11 @@ export const getAllFarmer = () => async (dispatch) => {
     let res = await producerService.getAllFarmer();
     dispatch({
       type: producer.GET_ALL_FARMER,
-      farmerList: res
+      farmerList: res.farmers
     });
   } catch (error) {
-    console.log('Can not get all farmer');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 
@@ -75,10 +79,22 @@ export const getFarmer = (id) => async (dispatch) => {
       farmer: res
     });
   } catch (error) {
-    console.log('get farmer error');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
-
+export const getFarmerByUsername = (username) => async (dispatch) => {
+  try {
+    let res = await producerService.getFarmerByUsername(username);
+    dispatch({
+      type: producer.GET_FARMER_BY_USERNAME,
+      farmer: res.farmer[0]
+    });
+  } catch (error) {
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
+  }
+};
 //end Farmer
 
 //start product
@@ -87,12 +103,14 @@ export const createProduct = (product) => async (dispatch) => {
     let res = await producerService.createProduct(product);
     dispatch({
       type: producer.CREAT_PRODUCT,
-      product: res
+      product: res.products
     });
-    toast.success('Product created successfully!');
+    toast.success(res.msg);
+
     dispatch(getAllProduct());
   } catch (error) {
-    console.log('create product error' + error);
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 
@@ -103,10 +121,11 @@ export const editProduct = (productId, product) => async (dispatch) => {
       type: producer.EDIT_PRODUCT,
       product: res
     });
-    toast.success('Product has been edited!');
+    toast.success(res.msg);
     dispatch(getAllProduct());
   } catch (error) {
-    console.log('edit product error' + error);
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 
@@ -118,8 +137,9 @@ export const getAllProduct = () => async (dispatch) => {
       type: producer.GET_ALL_PRODUCT,
       productList: res
     });
-  } catch (e) {
-    console.log('get all product error' + e);
+  } catch (error) {
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 
@@ -129,12 +149,15 @@ export const deleteProduct = (id) => async (dispatch) => {
 
     dispatch({
       type: producer.DELETE_PRODUCT,
-      product: res
+      product: res.data
     });
+    console.log(res);
+
     dispatch(getAllProduct());
-    toast.success('Farmer has been removed');
+    toast.success(res.msg);
   } catch (error) {
-    console.log('delete farmer error');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 export const getProduct = (id) => async (dispatch) => {
@@ -145,7 +168,8 @@ export const getProduct = (id) => async (dispatch) => {
       product: res
     });
   } catch (error) {
-    console.log('get product error');
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };
 
@@ -157,7 +181,8 @@ export const getAllProductByFarmer = (farmerUsername) => async (dispatch) => {
       type: producer.GET_ALL_PRODUCT_BY_FARMER,
       productListOfFarmer: res
     });
-  } catch (e) {
-    console.log('get all product error' + e);
+  } catch (error) {
+    if (error.response) toast.error(error.response.data.msg);
+    else toast.error('Internal server error');
   }
 };

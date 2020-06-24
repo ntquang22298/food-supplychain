@@ -6,6 +6,7 @@ export const producerService = {
   getAllFarmer,
   editFarmer,
   deleteFarmer,
+  getFarmerByUsername,
   createProduct,
   editProduct,
   getProduct,
@@ -17,7 +18,7 @@ export const producerService = {
 // create a farmer
 async function createFarmer(farmer) {
   try {
-    let respone = await axios.post(
+    let response = await axios.post(
       `${process.env.REACT_APP_API_BACKEND}/farmer`,
       {
         username: farmer.username,
@@ -31,15 +32,17 @@ async function createFarmer(farmer) {
       }
     );
 
-    return respone.data.farmers;
+    return response.data;
   } catch (error) {
+    console.log(error.response);
+
     throw error;
   }
 }
 // edit farmer
 async function editFarmer(farmerId, farmer) {
   try {
-    let respone = await axios.put(
+    let response = await axios.put(
       `${process.env.REACT_APP_API_BACKEND}/farmer/${farmerId}`,
       {
         name: farmer.name,
@@ -51,9 +54,8 @@ async function editFarmer(farmerId, farmer) {
         headers: authHeader()
       }
     );
-    console.log(respone);
 
-    return respone.farmers;
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -61,11 +63,11 @@ async function editFarmer(farmerId, farmer) {
 
 async function deleteFarmer(farmerId) {
   try {
-    let respone = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/farmer/${farmerId}`, {
+    let response = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/farmer/${farmerId}`, {
       headers: authHeader()
     });
 
-    return respone;
+    return response.data;
   } catch (error) {
     console.log(error);
 
@@ -75,10 +77,25 @@ async function deleteFarmer(farmerId) {
 // get a farmer by Id
 async function getFarmer(farmerId) {
   try {
-    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/farmer/${farmerId}`, {
+    let response = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/farmer/${farmerId}`, {
       headers: authHeader()
     });
-    return respone.data.farmer;
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// get a farmer by username
+async function getFarmerByUsername(username) {
+  try {
+    let response = await axios.get(
+      `${process.env.REACT_APP_API_BACKEND}/info/farmer-detail/${username}`,
+      {
+        headers: authHeader()
+      }
+    );
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -87,12 +104,11 @@ async function getFarmer(farmerId) {
 // get all farmers
 async function getAllFarmer() {
   try {
-    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/farmer`, {
+    let response = await axios.get(`${process.env.REACT_APP_API_BACKEND}/farmer`, {
       headers: authHeader()
     });
-    console.log(respone);
 
-    return respone.data.farmers;
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -103,7 +119,7 @@ async function getAllFarmer() {
 //create product
 async function createProduct(product) {
   try {
-    let respone = await axios.post(
+    let response = await axios.post(
       `${process.env.REACT_APP_API_BACKEND}/product`,
       {
         imageUrl: product.imageUrl,
@@ -116,7 +132,7 @@ async function createProduct(product) {
         headers: authHeader()
       }
     );
-    return respone;
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -124,7 +140,7 @@ async function createProduct(product) {
 
 async function editProduct(productId, product) {
   try {
-    let respone = await axios.put(
+    let response = await axios.put(
       `${process.env.REACT_APP_API_BACKEND}/product/${productId}`,
       {
         imageUrl: product.imageUrl,
@@ -137,43 +153,43 @@ async function editProduct(productId, product) {
         headers: authHeader()
       }
     );
-    return respone;
+    return response.data;
   } catch (error) {
     throw error;
   }
 }
 async function getAllProduct() {
   try {
-    let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/product`, {
+    let response = await axios.get(`${process.env.REACT_APP_API_BACKEND}/product`, {
       headers: authHeader()
     });
 
-    return respone.data.products;
+    return response.data.products;
   } catch (error) {
     throw error;
   }
 }
 async function getProduct(productId) {
   try {
-    let respone = await axios.get(
+    let response = await axios.get(
       `${process.env.REACT_APP_API_BACKEND}/info/product/${productId}`,
       {
         headers: authHeader()
       }
     );
 
-    return respone.data.product;
+    return response.data.product;
   } catch (error) {
     throw error;
   }
 }
 async function deleteProduct(productId) {
   try {
-    let respone = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/farmer/${productId}`, {
+    let response = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/product/${productId}`, {
       headers: authHeader()
     });
 
-    return respone;
+    return response.data;
   } catch (error) {
     console.log(error);
 
@@ -183,14 +199,14 @@ async function deleteProduct(productId) {
 
 async function getAllProductByFarmer(farmerUsername) {
   try {
-    let respone = await axios.get(
+    let response = await axios.get(
       `${process.env.REACT_APP_API_BACKEND}/product/farmer/${farmerUsername}`,
       {
         headers: authHeader()
       }
     );
 
-    return respone.data.products;
+    return response.data.products;
   } catch (error) {
     throw error;
   }

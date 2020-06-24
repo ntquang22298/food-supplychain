@@ -110,4 +110,28 @@ router.get("/:id", async function(req, res) {
         });
     }
 });
+router.get("/farmer-detail/:username", async function(req, res) {
+    try {
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-producer.json",
+            "wallet/wallet-producer",
+            process.env.ADMIN_PRODUCER_USERNAME
+        );
+        const result = await contract.evaluateTransaction(
+            "queryAllAssetByAttribute",
+            "Farmer",
+            "username",
+            req.params.username.toString()
+        );
+        let response = JSON.parse(result.toString());
+        console.log(response);
+
+        res.json({ farmer: response });
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        res.status(500).json({
+            error: error
+        });
+    }
+});
 module.exports = router;

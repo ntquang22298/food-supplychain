@@ -6,18 +6,19 @@ import * as action from 'actions/producer.actions.js';
 // @material-ui/core components
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 // core components
 import GridItem from 'components/Grid/GridItem.js';
 import GridContainer from 'components/Grid/GridContainer.js';
-import CustomInput from 'components/CustomInput/CustomInput.js';
 import Button from 'components/CustomButtons/Button.js';
 import Card from 'components/Card/Card.js';
 import CardHeader from 'components/Card/CardHeader.js';
 import CardBody from 'components/Card/CardBody.js';
 import CardFooter from 'components/Card/CardFooter.js';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
@@ -48,21 +49,56 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     width: '100%'
+  },
+  input: {
+    marginTop: '16px'
   }
 }));
 
 export default function UserProfile() {
   const classes = useStyles();
-
+  const [loading, setLoading] = React.useState(false);
   const [preview, setPreview] = React.useState('');
+  const [edit, setEdit] = React.useState(false);
   const storage = firebase.storage();
-
+  const initFarmer = {
+    name: '',
+    address: '',
+    description: '',
+    imageUrl: ''
+  };
   const dispatch = useDispatch();
+  const [farmer, setFarmer] = React.useState(initFarmer);
   const producer = useSelector((state) => state.producer);
   useEffect(() => {
-    const user = localStorage.getItem('user').username;
-    dispatch(action.getFarmer(user));
+    var user = JSON.parse(localStorage.getItem('user'));
+    dispatch(action.getFarmerByUsername(user.username));
   }, [dispatch]);
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+
+    setFarmer({ ...farmer, [name]: value });
+  };
+  const handelEditOpen = () => {
+    setEdit(true);
+
+    setFarmer(producer.farmer);
+  };
+  const handleCreateSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    farmer.id = producer.farmer ? producer.farmer.id : '';
+    farmer.imageUrl = preview;
+    setFarmer(farmer);
+
+    await dispatch(action.editFarmer(farmer));
+    setLoading(false);
+    setPreview('');
+    setFarmer(initFarmer);
+    setEdit(false);
+  };
   const fileChangedHandler = async (e) => {
     var file = e.target.files[0];
     var uploadTask = storage.ref('/farmers/' + file.name).put(file);
@@ -92,55 +128,135 @@ export default function UserProfile() {
   return (
     <div>
       <GridContainer>
+        <Backdrop className={classes.backdrop} open={loading}>
+          <CircularProgress color='inherit' />
+        </Backdrop>
         <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color='primary'>
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText='Name'
-                    id='name'
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText='Address'
-                    id='address'
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: '#AAAAAA' }}>About me</InputLabel>
-                  <CustomInput
-                    id='about-me'
-                    formControlProps={{
-                      fullWidth: true
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Button color='primary'>Update Profile</Button>
-            </CardFooter>
-          </Card>
+          {edit ? (
+            <Card>
+              <CardHeader color='primary'>
+                <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
+                <p className={classes.cardCategoryWhite}>Complete your profile</p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <TextField
+                      label='Name'
+                      id='name'
+                      name='name'
+                      fullWidth
+                      className={classes.input}
+                      value={farmer.name}
+                      onChange={handleChange}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <TextField
+                      label='Address'
+                      id='address'
+                      name='address'
+                      fullWidth
+                      className={classes.input}
+                      value={farmer.address}
+                      onChange={handleChange}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <InputLabel style={{ color: '#AAAAAA' }} className={classes.input}>
+                      About me
+                    </InputLabel>
+
+                    <TextField
+                      id='about-me'
+                      name='description'
+                      fullWidth
+                      className={classes.input}
+                      multiline
+                      rows={5}
+                      value={farmer.description}
+                      onChange={handleChange}
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button color='primary' onClick={handleCreateSubmit}>
+                  Update Profile
+                </Button>
+              </CardFooter>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader color='success'>
+                <h4 className={classes.cardTitleWhite}> Profile</h4>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <TextField
+                      label='Name'
+                      id='name'
+                      name='name'
+                      fullWidth
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      className={classes.input}
+                      value={producer.farmer ? producer.farmer.name : ''}
+                      variant='outlined'
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <TextField
+                      label='Address'
+                      id='address'
+                      name='address'
+                      fullWidth
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      className={classes.input}
+                      value={producer.farmer ? producer.farmer.address : ''}
+                      variant='outlined'
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <InputLabel style={{ color: '#AAAAAA' }} className={classes.input}>
+                      About me
+                    </InputLabel>
+
+                    <TextField
+                      id='about-me'
+                      name='description'
+                      fullWidth
+                      className={classes.input}
+                      multiline
+                      InputProps={{
+                        readOnly: true
+                      }}
+                      rows={5}
+                      value={producer.farmer ? producer.farmer.description : ''}
+                      variant='outlined'
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button color='info' onClick={handelEditOpen}>
+                  Edit Profile
+                </Button>
+              </CardFooter>
+            </Card>
+          )}
         </GridItem>
         <GridItem xs={12} sm={12} md={4}>
           <Card profile>
@@ -156,7 +272,7 @@ export default function UserProfile() {
               <label htmlFor='icon-button-file'>
                 <IconButton color='primary' aria-label='upload picture' component='span'>
                   <Avatar
-                    src={preview !== '' ? preview : ''}
+                    src={preview !== '' ? preview : producer.farmer ? producer.farmer.imageUrl : ''}
                     style={{
                       width: '130px',
                       height: '130px'
@@ -166,8 +282,10 @@ export default function UserProfile() {
               </label>
             </div>
             <CardBody profile>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <h6 className={classes.cardCategory}>{console.log(producer)}</h6>
+              <h4 className={classes.cardTitle}>{producer.farmer ? producer.farmer.name : ''}</h4>
+              <h6 className={classes.cardCategory}>
+                {producer.farmer ? producer.farmer.description : ''}
+              </h6>
             </CardBody>
           </Card>
         </GridItem>

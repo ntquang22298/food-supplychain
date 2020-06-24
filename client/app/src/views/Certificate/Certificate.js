@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import * as action from 'actions/producer.actions';
+import * as action from 'actions/farmer.actions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'firebase/storage';
 import firebase from 'config/firebase';
-
 // core components
 
 import Table from 'components/Table/Table.js';
@@ -32,9 +31,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ImageIcon from '@material-ui/icons/Image';
-import WorkIcon from '@material-ui/icons/Work';
-import AppleIcon from '@material-ui/icons/Apple';
+import PersonIcon from '@material-ui/icons/Person';
+import DescriptionIcon from '@material-ui/icons/Description';
+import BookIcon from '@material-ui/icons/Book';
+
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
     '&,& a,& a:hover,& a:focus': {
@@ -88,11 +88,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Product() {
+export default function Certificate() {
   const storage = firebase.storage();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const producer = useSelector((state) => state.producer);
+  const farmer = useSelector((state) => state.farmer);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [open, setOpen] = React.useState(false);
@@ -103,24 +103,17 @@ export default function Product() {
   const [detailDialog, setDetailDialog] = React.useState(false);
   // const [selectedFile, setSelectedFile] = React.useState(null);
   const [preview, setPreview] = React.useState(null);
-  const initProduct = {
+  const initCertificate = {
     id: '',
-    imageUrl: '',
     name: '',
-    type: '',
-    origin: '',
-    description: ''
+    description: '',
+    imageUrl: ''
   };
-  const [product, setProduct] = React.useState(initProduct);
+  const [certificate, setCertificate] = React.useState(initCertificate);
   useEffect(() => {
-    dispatch(action.getAllProduct());
-    dispatch(action.getAllFarmer());
+    dispatch(action.getAllCertificate());
   }, [dispatch]);
-  const columns = [
-    { id: 'name', label: 'Name' },
-    { id: 'origin', label: 'Origin' }
-  ];
-
+  const columns = [{ id: 'name', label: 'Name' }];
   // open dialog when user click create button
   const handleCreateOpen = () => {
     setDialog('create');
@@ -135,13 +128,11 @@ export default function Product() {
     setDialog('edit');
     setPreview('');
 
-    setProduct({
+    setCertificate({
       id: row.id,
-      imageUrl: row.imageUrl,
       name: row.name,
-      type: row.type,
-      origin: row.origin,
-      description: row.description
+      description: row.description,
+      imageUrl: row.imageUrl
     });
     setOpen(true);
   };
@@ -151,35 +142,35 @@ export default function Product() {
    **/
   const handleClose = () => {
     setPreview('');
-    setProduct(initProduct);
+    setCertificate(initCertificate);
     setOpen(false);
     setDetailDialog(false);
   };
   const handleChange = (e) => {
+    e.preventDefault();
     const { name, value } = e.target;
 
-    setProduct({ ...product, [name]: value });
+    setCertificate({ ...certificate, [name]: value });
   };
 
-  //create a product
+  //create a certificate
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    product.imageUrl = preview;
 
-    setProduct(product);
-    await dispatch(action.createProduct(product));
+    setLoading(true);
+    certificate.imageUrl = preview;
+    setCertificate(certificate);
+
+    await dispatch(action.createCertificate(certificate));
     setLoading(false);
     handleClose();
   };
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    product.imageUrl = preview !== '' ? preview : product.imageUrl;
-    console.log(product);
-
-    setProduct(product);
-    await dispatch(action.editProduct(product.id, product));
+    certificate.imageUrl = preview !== '' ? preview : certificate.imageUrl;
+    setCertificate(certificate);
+    await dispatch(action.editCertificate(certificate.id, certificate));
     setLoading(false);
     handleClose();
   };
@@ -192,20 +183,24 @@ export default function Product() {
   const handleDelete = async () => {
     setLoading(true);
 
-    await dispatch(action.deleteProduct(id));
+    await dispatch(action.deleteCertificate(id));
     setLoading(false);
     setDeleteAlert(false);
   };
-  const showDetail = async (e, row) => {
+  const showDetail = (e, row) => {
     e.stopPropagation();
-    setPreview('');
-    setProduct(row);
+    setCertificate({
+      id: row.id,
+      name: row.name,
+      description: row.description,
+      imageUrl: row.imageUrl
+    });
     setDetailDialog(true);
   };
-  const fileChangedHandler = (e) => {
+  const fileChangedHandler = async (e) => {
     setLoading(true);
     var file = e.target.files[0];
-    var uploadTask = storage.ref('/products/' + file.name).put(file);
+    var uploadTask = storage.ref('/certificates/' + file.name).put(file);
     uploadTask.on(
       'state_changed',
       (snapShot) => {
@@ -220,7 +215,7 @@ export default function Product() {
         // gets the functions from storage refences the image storage in firebase by the children
         // gets the download url then sets the image from firebase as the value for the imgUrl key:
         storage
-          .ref('products')
+          .ref('certificates')
           .child(file.name)
           .getDownloadURL()
           .then((fireBaseUrl) => {
@@ -231,25 +226,22 @@ export default function Product() {
 
     setLoading(false);
   };
-
   return (
     <div>
       <ToastContainer autoClose={2000} />
-      {/*Product Table*/}
+      {/*Certificate Table*/}
       <Card>
         <CardHeader color='success'>
           <CardIcon color='info' onClick={() => handleCreateOpen()}>
             <Icon>add_circle</Icon>
           </CardIcon>
-
-          <h4 className={classes.cardTitleWhite}>Product List</h4>
+          <h4 className={classes.cardTitleWhite}>Certificate List</h4>
         </CardHeader>
-
         <CardBody>
           <Table
             tableHeaderColor='info'
             columns={columns}
-            tableData={producer.productList ? producer.productList : []}
+            tableData={farmer.certificateList ? farmer.certificateList : []}
             handelEdit={handelEditOpen}
             handelDelete={handleShowAlert}
             showDetail={showDetail}
@@ -269,7 +261,7 @@ export default function Product() {
           <CircularProgress color='inherit' />
         </Backdrop>
         <DialogTitle id='responsive-dialog-title'>
-          {dialog === 'create' ? 'Create Product' : 'Edit Product'}
+          {dialog === 'create' ? 'Create Certificate' : 'Edit Certificate'}
         </DialogTitle>
         <DialogContent>
           <form>
@@ -286,13 +278,13 @@ export default function Product() {
                 <IconButton color='primary' aria-label='upload picture' component='span'>
                   <Avatar
                     variant='rounded'
-                    src={preview !== '' ? preview : product.imageUrl}
+                    src={preview !== '' ? preview : certificate.imageUrl}
                     style={{
                       width: '200px',
                       height: '200px'
                     }}
                   >
-                    <AppleIcon
+                    <BookIcon
                       style={{
                         width: '130px',
                         height: '130px'
@@ -309,30 +301,9 @@ export default function Product() {
               label='Name'
               type='text'
               fullWidth
-              value={product.name}
+              value={certificate.name}
               onChange={handleChange}
               name='name'
-            />
-            <TextField
-              margin='dense'
-              id='type'
-              label='Type'
-              type='type'
-              fullWidth
-              value={product.type}
-              onChange={handleChange}
-              name='type'
-            />
-
-            <TextField
-              margin='dense'
-              id='origin'
-              label='Origin'
-              type='text'
-              fullWidth
-              value={product.origin}
-              onChange={handleChange}
-              name='origin'
             />
             <TextField
               id='standard-multiline-static'
@@ -340,7 +311,7 @@ export default function Product() {
               multiline
               rows={12}
               fullWidth
-              value={product.description}
+              value={certificate.description}
               onChange={handleChange}
               name='description'
             />
@@ -364,25 +335,25 @@ export default function Product() {
         fullWidth
         fullScreen={fullScreen}
         open={detailDialog}
-        scroll='body'
+        scroll='paper'
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
       >
         <Backdrop className={classes.backdrop} open={loading}>
           <CircularProgress color='inherit' />
         </Backdrop>
-        <DialogTitle id='responsive-dialog-title'>Product detail</DialogTitle>
+        <DialogTitle id='responsive-dialog-title'>Certificate detail</DialogTitle>
         <DialogContent>
           <Avatar
             variant='rounded'
-            src={preview !== '' ? preview : product.imageUrl}
+            src={preview !== '' ? preview : certificate.imageUrl}
             style={{
               margin: 'auto',
               width: '200px',
               height: '200px'
             }}
           >
-            <AppleIcon
+            <BookIcon
               style={{
                 width: '130px',
                 height: '130px'
@@ -394,34 +365,18 @@ export default function Product() {
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <ImageIcon />
+                    <PersonIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary='Name' secondary={product.name} />
+                <ListItemText primary='Name' secondary={certificate.name} />
               </ListItem>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <WorkIcon />
+                    <DescriptionIcon />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary='Type' secondary={product.type} />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary='Origin' secondary={product.origin} />
-              </ListItem>
-              <ListItem>
-                <ListItemAvatar>
-                  <Avatar>
-                    <WorkIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary='Description' secondary={product.description} />
+                <ListItemText primary='Description' secondary={certificate.description} />
               </ListItem>
             </List>
           </div>

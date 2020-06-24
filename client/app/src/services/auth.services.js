@@ -20,8 +20,6 @@ async function signIn(username, password) {
     }
     return null;
   } catch (e) {
-    console.log(e);
-
     throw e;
   }
 }

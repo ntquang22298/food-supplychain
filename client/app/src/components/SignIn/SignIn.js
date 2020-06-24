@@ -13,6 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import * as actions from 'actions/auth.actions';
 import { useHistory } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh'
@@ -67,6 +69,8 @@ export default function SignInSide() {
   };
   return (
     <Grid container component='main' className={classes.root}>
+      <ToastContainer autoClose={2000} />
+
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>

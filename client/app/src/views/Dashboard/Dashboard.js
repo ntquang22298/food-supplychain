@@ -27,7 +27,8 @@ import CardHeader from 'components/Card/CardHeader.js';
 import CardIcon from 'components/Card/CardIcon.js';
 import CardBody from 'components/Card/CardBody.js';
 import CardFooter from 'components/Card/CardFooter.js';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { bugs, website, server } from 'variables/general.js';
 
 import { dailySalesChart, emailsSubscriptionChart, completedTasksChart } from 'variables/charts.js';
@@ -41,6 +42,8 @@ export default function Dashboard() {
   return (
     <div>
       <GridContainer>
+        <ToastContainer autoClose={2000} />
+
         <GridItem xs={12} sm={6} md={3}>
           <Card>
             <CardHeader color='warning' stats icon>

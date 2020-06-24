@@ -4,7 +4,9 @@ const initialState = {
   season: null,
   seasonList: [],
   action: null,
-  actionList: []
+  actionList: [],
+  certificate: null,
+  certificateList: []
 };
 
 const FarmerReducer = (state = initialState, action) => {
@@ -43,6 +45,31 @@ const FarmerReducer = (state = initialState, action) => {
       return {
         ...state,
         actionList: action.actionList
+      };
+    case actions.farmer.CREATE_CERTIFICATE:
+      return {
+        ...state,
+        certificate: action.certificate
+      };
+    case actions.farmer.GET_ALL_CERTIFICATE:
+      return {
+        ...state,
+        certificateList: action.certificateList
+      };
+    case actions.farmer.GET_CERTIFICATE:
+      return {
+        ...state,
+        certificate: action.certificate
+      };
+    case actions.farmer.EDIT_CERTIFICATE:
+      return {
+        ...state,
+        certificate: action.certificate
+      };
+    case actions.farmer.DELETE_CERTIFICATE:
+      return {
+        ...state,
+        certificate: action.certificate
       };
     default:
       return state;

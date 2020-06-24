@@ -25,6 +25,11 @@ const ProducerReducer = (state = initialState, action) => {
         ...state,
         farmer: action.farmer
       };
+    case actions.producer.GET_FARMER_BY_USERNAME:
+      return {
+        ...state,
+        farmer: action.farmer
+      };
     case actions.producer.EDIT_FARMER:
       return {
         ...state,
