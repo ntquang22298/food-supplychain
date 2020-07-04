@@ -13,7 +13,7 @@ export const farmer = {
   GET_ALL_CERTIFICATE: 'GET_ALL_CERTIFICATE',
   GET_CERTIFICATE: 'GET_CERTIFICATE',
   EDIT_CERTIFICATE: 'EDIT_CERTIFICATE',
-  DELETE_CERTIFICATE: 'DELETE_CERTIFICATE'
+  DELETE_CERTIFICATE: 'DELETE_CERTIFICATE',
 };
 // start Season
 export const createSeason = (season) => async (dispatch) => {
@@ -21,7 +21,7 @@ export const createSeason = (season) => async (dispatch) => {
     let res = await farmerService.createSeason(season);
     dispatch({
       type: farmer.CEATE_SEASON,
-      season: res
+      season: res,
     });
     dispatch(getAllSeason());
 
@@ -48,7 +48,7 @@ export const deleteSeason = (id) => async (dispatch) => {
 
     dispatch({
       type: farmer.DELETE_SEASON,
-      season: res
+      season: res,
     });
     dispatch(getAllSeason());
     toast.success('Season has been removed');
@@ -61,7 +61,7 @@ export const getAllSeason = () => async (dispatch) => {
     let res = await farmerService.getAllSeason();
     dispatch({
       type: farmer.GET_ALL_SEASON,
-      seasonList: res
+      seasonList: res,
     });
   } catch (error) {
     console.log('Can not get all season');
@@ -73,10 +73,11 @@ export const getSeason = (id) => async (dispatch) => {
     let res = await farmerService.getSeason(id);
     dispatch({
       type: farmer.GET_SEASON,
-      season: res
+      season: res,
     });
     dispatch(producerAction.getProduct(res.productId));
     dispatch(getAllAction(res.id));
+    return res;
   } catch (error) {
     console.log('get season error');
   }
@@ -90,7 +91,7 @@ export const createAction = (action) => async (dispatch) => {
     let res = await farmerService.createAction(action);
     dispatch({
       type: farmer.CREATE_ACTION,
-      action: res
+      action: res,
     });
     dispatch(getAllAction(action.seasonId));
     // dispatch(getAllAction(action.seasonId));
@@ -104,7 +105,7 @@ export const getAllAction = (seasonId) => async (dispatch) => {
 
     dispatch({
       type: farmer.GET_ALL_ACTION,
-      actionList: res
+      actionList: res,
     });
   } catch (error) {
     console.log(error);
@@ -117,7 +118,7 @@ export const createCertificate = (certificate) => async (dispatch) => {
     let res = await farmerService.createCertificate(certificate);
     dispatch({
       type: farmer.CEATE_CERTIFICATE,
-      certificate: res
+      certificate: res,
     });
     dispatch(getAllCertificate());
 
@@ -144,7 +145,7 @@ export const deleteCertificate = (id) => async (dispatch) => {
 
     dispatch({
       type: farmer.DELETE_CERTIFICATE,
-      certificate: res
+      certificate: res,
     });
     dispatch(getAllCertificate());
     toast.success('Certificate has been removed');
@@ -157,8 +158,20 @@ export const getAllCertificate = () => async (dispatch) => {
     let res = await farmerService.getAllCertificate();
     dispatch({
       type: farmer.GET_ALL_CERTIFICATE,
-      certificateList: res
+      certificateList: res,
     });
+  } catch (error) {
+    console.log('Can not get all certificate');
+  }
+};
+export const getCertificate = (username) => async (dispatch) => {
+  try {
+    let res = await farmerService.getCertificate(username);
+    dispatch({
+      type: farmer.GET_CERTIFICATE,
+      certificate: res,
+    });
+    return res;
   } catch (error) {
     console.log('Can not get all certificate');
   }

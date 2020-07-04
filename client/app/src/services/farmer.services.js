@@ -12,7 +12,7 @@ export const farmerService = {
   getCertificate,
   getAllCertificate,
   editCertificate,
-  deleteCertificate
+  deleteCertificate,
 };
 //------------Season-----------------------------------------------------------------------//
 // create a season
@@ -24,10 +24,10 @@ async function createSeason(season) {
         name: season.name,
         sowingDate: season.sowingDate,
         harvestDate: season.harvestDate,
-        productId: season.productId
+        productId: season.productId,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -39,21 +39,18 @@ async function createSeason(season) {
 // edit season
 async function editSeason(seasonId, season) {
   try {
-    console.log(season);
-
     let respone = await axios.put(
       `${process.env.REACT_APP_API_BACKEND}/season/${seasonId}`,
       {
         name: season.name,
         sowingDate: season.sowingDate,
         harvestDate: season.harvestDate,
-        productId: season.productId
+        productId: season.productId,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
-    console.log(respone);
 
     return respone.seasons;
   } catch (error) {
@@ -64,7 +61,7 @@ async function editSeason(seasonId, season) {
 async function deleteSeason(seasonId) {
   try {
     let respone = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/season/${seasonId}`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return respone;
@@ -78,7 +75,7 @@ async function deleteSeason(seasonId) {
 async function getSeason(seasonId) {
   try {
     let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/season/${seasonId}`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
     return respone.data.result;
   } catch (error) {
@@ -90,7 +87,7 @@ async function getSeason(seasonId) {
 async function getAllSeason() {
   try {
     let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/season`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return respone.data.seasons;
@@ -110,10 +107,10 @@ async function createAction(action) {
         action: action.action,
         time: action.time,
         description: action.description,
-        seasonId: action.seasonId
+        seasonId: action.seasonId,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
     return respone.data.action;
@@ -125,7 +122,7 @@ async function createAction(action) {
 async function getAllAction(seasonId) {
   try {
     let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/actions/${seasonId}`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return respone.data.actions;
@@ -141,10 +138,10 @@ async function createCertificate(certificate) {
       {
         name: certificate.name,
         description: certificate.description,
-        imageUrl: certificate.imageUrl
+        imageUrl: certificate.imageUrl,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -161,10 +158,10 @@ async function editCertificate(certificateId, certificate) {
       {
         name: certificate.name,
         description: certificate.description,
-        imageUrl: certificate.imageUrl
+        imageUrl: certificate.imageUrl,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -179,7 +176,7 @@ async function deleteCertificate(certificateId) {
     let respone = await axios.delete(
       `${process.env.REACT_APP_API_BACKEND}/certificate/${certificateId}`,
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -191,12 +188,12 @@ async function deleteCertificate(certificateId) {
   }
 }
 // get a certificate by Id
-async function getCertificate(certificateId) {
+async function getCertificate(username) {
   try {
     let respone = await axios.get(
-      `${process.env.REACT_APP_API_BACKEND}/info/certificate/${certificateId}`,
+      `${process.env.REACT_APP_API_BACKEND}/info/certificate/${username}`,
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
     return respone.data.certificate;
@@ -209,7 +206,7 @@ async function getCertificate(certificateId) {
 async function getAllCertificate() {
   try {
     let respone = await axios.get(`${process.env.REACT_APP_API_BACKEND}/certificate`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return respone.data.certificates;

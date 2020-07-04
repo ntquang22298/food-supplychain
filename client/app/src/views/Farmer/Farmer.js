@@ -41,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
       margin: '0',
       fontSize: '14px',
       marginTop: '0',
-      marginBottom: '0'
+      marginBottom: '0',
     },
     '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
+      color: '#FFFFFF',
+    },
   },
   cardTitleWhite: {
     'color': '#FFFFFF',
@@ -59,32 +59,32 @@ const useStyles = makeStyles((theme) => ({
       color: '#777',
       fontSize: '65%',
       fontWeight: '400',
-      lineHeight: '1'
-    }
+      lineHeight: '1',
+    },
   },
   backdrop: {
     zIndex: 1,
-    color: 'white'
+    color: 'white',
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   appBar: {
-    position: 'relative'
+    position: 'relative',
   },
   title: {
     marginLeft: theme.spacing(2),
-    flex: 1
+    flex: 1,
   },
   detail: {
-    marginTop: '50px'
+    marginTop: '50px',
   },
   center: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   wrap: {
-    wordWrap: 'break-word'
-  }
+    wordWrap: 'break-word',
+  },
 }));
 
 export default function Farmer() {
@@ -108,7 +108,7 @@ export default function Farmer() {
     name: '',
     address: '',
     description: '',
-    imageUrl: ''
+    imageUrl: '',
   };
   const [farmer, setFarmer] = React.useState(initFarmer);
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function Farmer() {
   }, [dispatch]);
   const columns = [
     { id: 'name', label: 'Name' },
-    { id: 'address', label: 'Address' }
+    { id: 'address', label: 'Address' },
   ];
   // open dialog when user click create button
   const handleCreateOpen = () => {
@@ -131,6 +131,7 @@ export default function Farmer() {
     e.stopPropagation();
     setDialog('edit');
     setPreview('');
+    console.log(row);
 
     setFarmer({
       id: row.id,
@@ -138,7 +139,7 @@ export default function Farmer() {
       address: row.address,
       description: row.description,
       imageUrl: row.imageUrl,
-      username: row.username
+      username: row.username,
     });
     setOpen(true);
   };
@@ -200,7 +201,7 @@ export default function Farmer() {
       name: row.name,
       address: row.address,
       description: row.description,
-      imageUrl: row.imageUrl
+      imageUrl: row.imageUrl,
     });
     setDetailDialog(true);
   };
@@ -286,8 +287,8 @@ export default function Farmer() {
                   <Avatar
                     src={preview !== '' ? preview : farmer.imageUrl}
                     style={{
-                      width: '130px',
-                      height: '130px'
+                      width: '200px',
+                      height: '200px',
                     }}
                   />
                 </IconButton>
@@ -371,8 +372,8 @@ export default function Farmer() {
             src={farmer.imageUrl}
             style={{
               margin: 'auto',
-              width: '130px',
-              height: '130px'
+              width: '200px',
+              height: '200px',
             }}
           />
           <div className={classes.detail}>

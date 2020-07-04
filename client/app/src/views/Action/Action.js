@@ -45,11 +45,11 @@ const useStyles = makeStyles((theme) => ({
       margin: '0',
       fontSize: '14px',
       marginTop: '0',
-      marginBottom: '0'
+      marginBottom: '0',
     },
     '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
+      color: '#FFFFFF',
+    },
   },
   cardTitleWhite: {
     'color': '#FFFFFF',
@@ -63,24 +63,31 @@ const useStyles = makeStyles((theme) => ({
       color: '#777',
       fontSize: '65%',
       fontWeight: '400',
-      lineHeight: '1'
-    }
+      lineHeight: '1',
+    },
   },
   backdrop: {
     zIndex: 1,
-    color: 'white'
+    color: 'white',
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   wrap: {
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
   },
   img: {
     maxWidth: '100%',
     maxHeight: 'auto',
-    borderRadius: '5px'
-  }
+    borderRadius: '5px',
+  },
+  avatar: {
+    margin: '0 auto 0',
+    overflow: 'hidden',
+    padding: '0',
+    boxShadow:
+      '0 16px 38px -12px rgba(0,0,0,.56), 0 4px 25px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2)',
+  },
 }));
 export default function Action({ match }) {
   const storage = firebase.storage();
@@ -102,7 +109,7 @@ export default function Action({ match }) {
     action: '',
     time: '',
     description: '',
-    seasonId: match.params.id
+    seasonId: match.params.id,
   };
   const [action, setAction] = React.useState(initAction);
 
@@ -310,6 +317,7 @@ export default function Action({ match }) {
                   {action.action}
                 </Typography>
                 <Avatar
+                  className={classes.avatar}
                   style={{ width: '150px', height: '150px' }}
                   src={action.imgUrl}
                   alt='action'
@@ -354,10 +362,11 @@ export default function Action({ match }) {
               <label htmlFor='icon-button-file'>
                 <IconButton color='primary' aria-label='upload picture' component='span'>
                   <Avatar
+                    className={classes.avatar}
                     src={preview !== '' ? preview : action.imgUrl}
                     style={{
                       width: '200px',
-                      height: '200px'
+                      height: '200px',
                     }}
                     alt='action'
                   />

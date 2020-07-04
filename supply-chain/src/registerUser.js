@@ -7,7 +7,7 @@
 const {
     FileSystemWallet,
     Gateway,
-    X509WalletMixin
+    X509WalletMixin,
 } = require("fabric-network");
 const path = require("path");
 const User = require("./server/model/User");
@@ -15,14 +15,14 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 // Connect database
-mongoose.connect(
-    process.env.MONGODB_URI,
-    { useUnifiedTopology: true, useNewUrlParser: true },
-    error => {
-        if (error) console.log(error);
-    }
-);
-mongoose.set("useCreateIndex", true);
+// mongoose.connect(
+//     process.env.MONGODB_URI,
+//     { useUnifiedTopology: true, useNewUrlParser: true },
+//     (error) => {
+//         if (error) console.log(error);
+//     }
+// );
+// mongoose.set("useCreateIndex", true);
 
 async function registerUser(username, org, role, admin) {
     try {
@@ -60,7 +60,7 @@ async function registerUser(username, org, role, admin) {
         let user = new User({
             username: username,
             password: process.env.USER_DEFAULT_PASSWORD,
-            role: role
+            role: role,
         });
 
         let userSaved = await user.save();
@@ -69,14 +69,14 @@ async function registerUser(username, org, role, admin) {
         await gateway.connect(ccpPath, {
             wallet,
             identity: admin,
-            discovery: { enabled: true, asLocalhost: true }
+            discovery: { enabled: true, asLocalhost: true },
         });
 
         // Get the CA client object from the gateway for interacting with the CA.
         const ca = gateway.getClient().getCertificateAuthority();
         const adminIdentity = gateway.getCurrentIdentity();
         if (userSaved) {
-            const upper = org.replace(/^\w/, c => c.toUpperCase());
+            const upper = org.replace(/^\w/, (c) => c.toUpperCase());
             // Register the user, enroll the user, and import the new identity into the wallet.
             const secret = await ca.register(
                 { enrollmentID: username, role: "client" },
@@ -84,7 +84,7 @@ async function registerUser(username, org, role, admin) {
             );
             const enrollment = await ca.enroll({
                 enrollmentID: username,
-                enrollmentSecret: secret
+                enrollmentSecret: secret,
             });
             const userIdentity = X509WalletMixin.createIdentity(
                 `${upper}MSP`,

@@ -42,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
       margin: '0',
       fontSize: '14px',
       marginTop: '0',
-      marginBottom: '0'
+      marginBottom: '0',
     },
     '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
+      color: '#FFFFFF',
+    },
   },
   cardTitleWhite: {
     'color': '#FFFFFF',
@@ -60,32 +60,39 @@ const useStyles = makeStyles((theme) => ({
       color: '#777',
       fontSize: '65%',
       fontWeight: '400',
-      lineHeight: '1'
-    }
+      lineHeight: '1',
+    },
   },
   backdrop: {
     zIndex: 1,
-    color: 'white'
+    color: 'white',
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   appBar: {
-    position: 'relative'
+    position: 'relative',
   },
   title: {
     marginLeft: theme.spacing(2),
-    flex: 1
+    flex: 1,
   },
   detail: {
-    marginTop: '50px'
+    marginTop: '50px',
   },
   center: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   wrap: {
-    wordWrap: 'break-word'
-  }
+    wordWrap: 'break-word',
+  },
+  avatar: {
+    margin: '0 auto 0',
+    overflow: 'hidden',
+    padding: '0',
+    boxShadow:
+      '0 16px 38px -12px rgba(0,0,0,.56), 0 4px 25px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2)',
+  },
 }));
 
 export default function Certificate() {
@@ -107,7 +114,7 @@ export default function Certificate() {
     id: '',
     name: '',
     description: '',
-    imageUrl: ''
+    imageUrl: '',
   };
   const [certificate, setCertificate] = React.useState(initCertificate);
   useEffect(() => {
@@ -132,7 +139,7 @@ export default function Certificate() {
       id: row.id,
       name: row.name,
       description: row.description,
-      imageUrl: row.imageUrl
+      imageUrl: row.imageUrl,
     });
     setOpen(true);
   };
@@ -193,7 +200,7 @@ export default function Certificate() {
       id: row.id,
       name: row.name,
       description: row.description,
-      imageUrl: row.imageUrl
+      imageUrl: row.imageUrl,
     });
     setDetailDialog(true);
   };
@@ -277,17 +284,18 @@ export default function Certificate() {
               <label htmlFor='icon-button-file'>
                 <IconButton color='primary' aria-label='upload picture' component='span'>
                   <Avatar
+                    className={classes.avatar}
                     variant='rounded'
                     src={preview !== '' ? preview : certificate.imageUrl}
                     style={{
                       width: '200px',
-                      height: '200px'
+                      height: '200px',
                     }}
                   >
                     <BookIcon
                       style={{
                         width: '130px',
-                        height: '130px'
+                        height: '130px',
                       }}
                     />
                   </Avatar>
@@ -345,18 +353,19 @@ export default function Certificate() {
         <DialogTitle id='responsive-dialog-title'>Certificate detail</DialogTitle>
         <DialogContent>
           <Avatar
+            className={classes.avatar}
             variant='rounded'
             src={preview !== '' ? preview : certificate.imageUrl}
             style={{
               margin: 'auto',
               width: '200px',
-              height: '200px'
+              height: '200px',
             }}
           >
             <BookIcon
               style={{
                 width: '130px',
-                height: '130px'
+                height: '130px',
               }}
             />
           </Avatar>

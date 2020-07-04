@@ -13,7 +13,7 @@ export const producer = {
   GET_PRODUCT: 'GET_PRODUCT',
   GET_ALL_PRODUCT: 'GET_ALL_PRODUCT',
   DELETE_PRODUCT: 'DELETE_PRODUCT',
-  GET_ALL_PRODUCT_BY_FARMER: 'GET_ALL_PRODUCT_BY_FARMER'
+  GET_ALL_PRODUCT_BY_FARMER: 'GET_ALL_PRODUCT_BY_FARMER',
 };
 // start Farmer
 export const createFarmer = (farmer) => async (dispatch) => {
@@ -21,7 +21,7 @@ export const createFarmer = (farmer) => async (dispatch) => {
     let res = await producerService.createFarmer(farmer);
     dispatch({
       type: producer.CEATE_FARMER,
-      farmer: res.farmers
+      farmer: res.farmers,
     });
 
     toast.success(res.msg);
@@ -49,7 +49,7 @@ export const deleteFarmer = (id) => async (dispatch) => {
     let res = await producerService.deleteFarmer(id);
 
     dispatch({
-      type: producer.DELETE_FARMER
+      type: producer.DELETE_FARMER,
     });
     dispatch(getAllFarmer());
     toast.success(res.msg);
@@ -63,7 +63,7 @@ export const getAllFarmer = () => async (dispatch) => {
     let res = await producerService.getAllFarmer();
     dispatch({
       type: producer.GET_ALL_FARMER,
-      farmerList: res.farmers
+      farmerList: res.farmers,
     });
   } catch (error) {
     if (error.response) toast.error(error.response.data.msg);
@@ -76,7 +76,7 @@ export const getFarmer = (id) => async (dispatch) => {
     let res = await producerService.getFarmer(id);
     dispatch({
       type: producer.GET_FARMER,
-      farmer: res
+      farmer: res,
     });
   } catch (error) {
     if (error.response) toast.error(error.response.data.msg);
@@ -88,8 +88,9 @@ export const getFarmerByUsername = (username) => async (dispatch) => {
     let res = await producerService.getFarmerByUsername(username);
     dispatch({
       type: producer.GET_FARMER_BY_USERNAME,
-      farmer: res.farmer[0]
+      farmer: res.farmer[0],
     });
+    return res;
   } catch (error) {
     if (error.response) toast.error(error.response.data.msg);
     else toast.error('Internal server error');
@@ -103,7 +104,7 @@ export const createProduct = (product) => async (dispatch) => {
     let res = await producerService.createProduct(product);
     dispatch({
       type: producer.CREAT_PRODUCT,
-      product: res.products
+      product: res.products,
     });
     toast.success(res.msg);
 
@@ -119,7 +120,7 @@ export const editProduct = (productId, product) => async (dispatch) => {
     let res = await producerService.editProduct(productId, product);
     dispatch({
       type: producer.EDIT_PRODUCT,
-      product: res
+      product: res,
     });
     toast.success(res.msg);
     dispatch(getAllProduct());
@@ -135,7 +136,7 @@ export const getAllProduct = () => async (dispatch) => {
 
     dispatch({
       type: producer.GET_ALL_PRODUCT,
-      productList: res
+      productList: res,
     });
   } catch (error) {
     if (error.response) toast.error(error.response.data.msg);
@@ -149,9 +150,8 @@ export const deleteProduct = (id) => async (dispatch) => {
 
     dispatch({
       type: producer.DELETE_PRODUCT,
-      product: res.data
+      product: res.data,
     });
-    console.log(res);
 
     dispatch(getAllProduct());
     toast.success(res.msg);
@@ -165,7 +165,7 @@ export const getProduct = (id) => async (dispatch) => {
     let res = await producerService.getProduct(id);
     dispatch({
       type: producer.GET_PRODUCT,
-      product: res
+      product: res,
     });
   } catch (error) {
     if (error.response) toast.error(error.response.data.msg);
@@ -179,7 +179,7 @@ export const getAllProductByFarmer = (farmerUsername) => async (dispatch) => {
 
     dispatch({
       type: producer.GET_ALL_PRODUCT_BY_FARMER,
-      productListOfFarmer: res
+      productListOfFarmer: res,
     });
   } catch (error) {
     if (error.response) toast.error(error.response.data.msg);

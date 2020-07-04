@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { authHeader } from '_helpers/auth-header';
 
 export const authService = {
   signIn,
-  signOut
+  signOut,
+  changePassword,
 };
 
 async function signIn(username, password) {
@@ -26,4 +28,25 @@ async function signIn(username, password) {
 
 async function signOut() {
   localStorage.removeItem('user');
+}
+
+async function changePassword(password) {
+  try {
+    let respone = await axios.post(
+      `${process.env.REACT_APP_API_BACKEND}/auth/changePassword`,
+      {
+        oldPass: password.oldPass,
+        newPass: password.newPass,
+        confirmPass: password.confirmPass,
+      },
+      {
+        headers: authHeader(),
+      }
+    );
+    console.log(respone);
+
+    return respone;
+  } catch (e) {
+    throw e;
+  }
 }

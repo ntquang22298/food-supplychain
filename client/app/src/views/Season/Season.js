@@ -30,6 +30,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { Avatar } from '@material-ui/core';
+import AppleIcon from '@material-ui/icons/Apple';
+import IconButton from '@material-ui/core/IconButton';
+
 const useStyles = makeStyles((theme) => ({
   cardCategoryWhite: {
     '&,& a,& a:hover,& a:focus': {
@@ -37,11 +40,11 @@ const useStyles = makeStyles((theme) => ({
       margin: '0',
       fontSize: '14px',
       marginTop: '0',
-      marginBottom: '0'
+      marginBottom: '0',
     },
     '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
+      color: '#FFFFFF',
+    },
   },
   cardTitleWhite: {
     'color': '#FFFFFF',
@@ -55,32 +58,39 @@ const useStyles = makeStyles((theme) => ({
       color: '#777',
       fontSize: '65%',
       fontWeight: '400',
-      lineHeight: '1'
-    }
+      lineHeight: '1',
+    },
   },
   backdrop: {
     zIndex: 1,
-    color: 'white'
+    color: 'white',
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   appBar: {
-    position: 'relative'
+    position: 'relative',
   },
   title: {
     marginLeft: theme.spacing(2),
-    flex: 1
+    flex: 1,
   },
   detail: {
-    marginTop: '50px'
+    marginTop: '50px',
   },
   center: {
-    textAlign: 'center'
+    textAlign: 'center',
   },
   wrap: {
-    wordWrap: 'break-word'
-  }
+    wordWrap: 'break-word',
+  },
+  avatar: {
+    margin: '0 auto 0',
+    overflow: 'hidden',
+    padding: '0',
+    boxShadow:
+      '0 16px 38px -12px rgba(0,0,0,.56), 0 4px 25px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2)',
+  },
 }));
 
 export default function Season() {
@@ -102,7 +112,7 @@ export default function Season() {
     name: '',
     sowingDate: '',
     harvestDate: '',
-    productId: ''
+    productId: '',
   };
   const [season, setSeason] = React.useState(initSeason);
   useEffect(() => {
@@ -111,7 +121,7 @@ export default function Season() {
   }, [dispatch]);
   const columns = [
     { id: 'name', label: 'Name' },
-    { id: 'productId', label: 'Product' }
+    { id: 'productId', label: 'Product' },
   ];
 
   // open dialog when user click create button
@@ -226,16 +236,26 @@ export default function Season() {
           {dialog === 'create' ? 'Create Season' : 'Edit Season'}
         </DialogTitle>
         <DialogContent>
-          <div>
-            <Avatar
-              style={{
-                width: '130px',
-                height: '130px',
-                margin: 'auto'
-              }}
-              src={product ? product.imageUrl : ''}
-              alt='Product'
-            />
+          <div style={{ textAlign: 'center' }}>
+            <IconButton color='primary' aria-label='upload picture' component='span'>
+              <Avatar
+                className={classes.avatar}
+                style={{
+                  width: '200px',
+                  height: '200px',
+                  margin: 'auto',
+                }}
+                src={product ? product.imageUrl : ''}
+                alt='Product'
+              >
+                <AppleIcon
+                  style={{
+                    width: '200px',
+                    height: '200px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
           </div>
           <form>
             <TextField

@@ -9,27 +9,15 @@ require("dotenv").config();
 router.post(
     "/",
     [
-        body("username")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape(),
-        body("name")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape(),
-        body("address")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape()
+        body("username").not().isEmpty().trim().escape(),
+        body("name").not().isEmpty().trim().escape(),
+        body("address").not().isEmpty().trim().escape(),
     ],
-    async function(req, res) {
+    async function (req, res) {
         try {
             if (req.decoded.user.role !== USER_ROLES.ADMIN_PRODUCER) {
                 return res.status(403).json({
-                    msg: "Permission Denied"
+                    msg: "Permission Denied",
                 });
             }
 
@@ -50,7 +38,7 @@ router.post(
                 address: req.body.address,
                 description: req.body.description,
                 imageUrl: req.body.imageUrl,
-                username: req.body.username
+                username: req.body.username,
             };
             let tx = await contract.submitTransaction(
                 "addAsset",
@@ -65,12 +53,12 @@ router.post(
             );
 
             res.status(200).json({
-                msg: `Create Farmer ${req.body.name} successful!`
+                msg: `Create Farmer ${req.body.name} successful!`,
             });
         } catch (error) {
             console.error(`Failed to evaluate transaction: ${error}`);
             res.status(500).json({
-                error: error
+                error: error,
             });
         }
     }
@@ -79,22 +67,17 @@ router.post(
 router.put(
     "/:id",
     [
-        body("name")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape(),
-        body("address")
-            .not()
-            .isEmpty()
-            .trim()
-            .escape()
+        body("name").not().isEmpty().trim().escape(),
+        body("address").not().isEmpty().trim().escape(),
     ],
-    async function(req, res) {
+    async function (req, res) {
         try {
-            if (req.decoded.user.role !== USER_ROLES.ADMIN_PRODUCER) {
+            if (
+                req.decoded.user.role !== USER_ROLES.ADMIN_PRODUCER &&
+                req.decoded.user.role !== USER_ROLES.FARMER
+            ) {
                 return res.status(403).json({
-                    msg: "Permission Denied"
+                    msg: "Permission Denied",
                 });
             }
 
@@ -113,8 +96,10 @@ router.put(
                 name: req.body.name,
                 address: req.body.address,
                 description: req.body.description,
-                imageUrl: req.body.imageUrl
+                imageUrl: req.body.imageUrl,
+                username: req.body.username,
             };
+
             const result = await contract.submitTransaction(
                 "editAsset",
                 farmer.id.toString(),
@@ -123,53 +108,47 @@ router.put(
 
             res.status(200).json({
                 msg: `Farmer ${req.body.name} has been edited!`,
-                txid: result.toString()
+                txid: result.toString(),
             });
         } catch (error) {
             console.error(`Failed to evaluate transaction: ${error}`);
             res.status(500).json({
-                error: error
+                error: error,
             });
         }
     }
 );
 
-router.delete(
-    "/:id",
-    check("id")
-        .trim()
-        .escape(),
-    async function(req, res) {
-        try {
-            if (req.decoded.user.role !== USER_ROLES.ADMIN_PRODUCER) {
-                return res.status(403).json({
-                    msg: "Permission Denied"
-                });
-            }
-            const contract = await fabricNetwork.connectNetwork(
-                "connection-producer.json",
-                "wallet/wallet-producer",
-                process.env.ADMIN_PRODUCER_USERNAME
-            );
-            const result = await contract.submitTransaction(
-                "deleteAsset",
-                req.params.id.toString()
-            );
-
-            res.status(200).json({
-                result: result,
-                msg: `Delete Farmer successful!`
-            });
-        } catch (error) {
-            console.error(`Failed to evaluate transaction: ${error}`);
-            res.status(500).json({
-                error: error
+router.delete("/:id", check("id").trim().escape(), async function (req, res) {
+    try {
+        if (req.decoded.user.role !== USER_ROLES.ADMIN_PRODUCER) {
+            return res.status(403).json({
+                msg: "Permission Denied",
             });
         }
-    }
-);
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-producer.json",
+            "wallet/wallet-producer",
+            process.env.ADMIN_PRODUCER_USERNAME
+        );
+        const result = await contract.submitTransaction(
+            "deleteAsset",
+            req.params.id.toString()
+        );
 
-router.get("/", async function(req, res) {
+        res.status(200).json({
+            result: result,
+            msg: `Delete Farmer successful!`,
+        });
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        res.status(500).json({
+            error: error,
+        });
+    }
+});
+
+router.get("/", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
@@ -185,7 +164,7 @@ router.get("/", async function(req, res) {
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
         });
     }
 });

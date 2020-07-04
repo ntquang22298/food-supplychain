@@ -13,7 +13,7 @@
         "test": "nyc mocha --recursive"
     },
     "engineStrict": true,
-    "author": "Iván Alberquilla",
+    "author": "Nguyen Tuan Quang",
     "license": "Apache-2.0",
     "dependencies": {
         "arraybuffer-to-string": "^1.0.2",

@@ -2,7 +2,7 @@ const router = require("express").Router();
 const fabricNetwork = require("../fabricNetwork");
 
 require("dotenv").config();
-router.get("/farmer/:id", async function(req, res) {
+router.get("/farmer/:id", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
@@ -18,11 +18,11 @@ router.get("/farmer/:id", async function(req, res) {
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
         });
     }
 });
-router.get("/season/:id", async function(req, res) {
+router.get("/season/:id", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
@@ -39,12 +39,12 @@ router.get("/season/:id", async function(req, res) {
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
         });
     }
 });
 
-router.get("/product/:id", async function(req, res) {
+router.get("/product/:id", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
@@ -60,12 +60,12 @@ router.get("/product/:id", async function(req, res) {
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
         });
     }
 });
 
-router.get("/actions/:seasonId", async function(req, res) {
+router.get("/actions/:seasonId", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
@@ -83,12 +83,12 @@ router.get("/actions/:seasonId", async function(req, res) {
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
         });
     }
 });
 
-router.get("/:id", async function(req, res) {
+router.get("/:id", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-retailer.json",
@@ -100,17 +100,16 @@ router.get("/:id", async function(req, res) {
             req.params.id.toString()
         );
         let response = JSON.parse(result.toString());
-        console.log(response);
 
         res.json({ product: response });
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
         });
     }
 });
-router.get("/farmer-detail/:username", async function(req, res) {
+router.get("/farmer-detail/:username", async function (req, res) {
     try {
         const contract = await fabricNetwork.connectNetwork(
             "connection-producer.json",
@@ -124,13 +123,35 @@ router.get("/farmer-detail/:username", async function(req, res) {
             req.params.username.toString()
         );
         let response = JSON.parse(result.toString());
-        console.log(response);
 
         res.json({ farmer: response });
     } catch (error) {
         console.error(`Failed to evaluate transaction: ${error}`);
         res.status(500).json({
-            error: error
+            error: error,
+        });
+    }
+});
+router.get("/certificate/:username", async function (req, res) {
+    try {
+        const contract = await fabricNetwork.connectNetwork(
+            "connection-producer.json",
+            "wallet/wallet-producer",
+            process.env.ADMIN_PRODUCER_USERNAME
+        );
+        const result = await contract.evaluateTransaction(
+            "queryAllAssetByAttribute",
+            "Certificate",
+            "farmer",
+            req.params.username.toString()
+        );
+        let response = JSON.parse(result.toString());
+
+        res.json({ certificate: response });
+    } catch (error) {
+        console.error(`Failed to evaluate transaction: ${error}`);
+        res.status(500).json({
+            error: error,
         });
     }
 });

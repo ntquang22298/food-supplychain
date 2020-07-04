@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import * as actions from 'actions/farmer.actions';
-
+import * as producerAction from 'actions/producer.actions';
 //components
 import Card from 'components/Card/Card.js';
 import CardHeader from 'components/Card/CardHeader.js';
@@ -13,6 +13,7 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import 'react-vertical-timeline-component/style.min.css';
 import WorkIcon from '@material-ui/icons/Work';
 import StarIcon from '@material-ui/icons/Star';
+import PersonIcon from '@material-ui/icons/Person';
 import { Avatar } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -30,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
       margin: '0',
       fontSize: '14px',
       marginTop: '0',
-      marginBottom: '0'
+      marginBottom: '0',
     },
     '& a,& a:hover,& a:focus': {
-      color: '#FFFFFF'
-    }
+      color: '#FFFFFF',
+    },
   },
   cardTitleWhite: {
     'color': '#FFFFFF',
@@ -48,23 +49,23 @@ const useStyles = makeStyles((theme) => ({
       color: '#777',
       fontSize: '65%',
       fontWeight: '400',
-      lineHeight: '1'
-    }
+      lineHeight: '1',
+    },
   },
   backdrop: {
     zIndex: 1,
-    color: 'white'
+    color: 'white',
   },
   input: {
-    display: 'none'
+    display: 'none',
   },
   wrap: {
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
   },
   img: {
     maxWidth: '100%',
-    maxHeight: 'auto'
-  }
+    maxHeight: 'auto',
+  },
 }));
 export default function QrScan({ match }) {
   const classes = useStyles();
@@ -73,7 +74,15 @@ export default function QrScan({ match }) {
   const farmer = useSelector((state) => state.farmer);
 
   useEffect(() => {
-    dispatch(actions.getSeason(match.params.id));
+    async function loadInfo() {
+      let season = await dispatch(actions.getSeason(match.params.id));
+
+      let farmer = await dispatch(producerAction.getFarmerByUsername(season.farmer));
+      console.log(farmer.farmer[0]);
+
+      await dispatch(actions.getCertificate(farmer.farmer[0].username));
+    }
+    loadInfo();
   }, [dispatch, match.params.id]);
 
   return (
@@ -135,12 +144,23 @@ export default function QrScan({ match }) {
                     <ListItem>
                       <ListItemAvatar>
                         <Avatar>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary='Farmer'
+                        secondary={producer.farmer ? producer.farmer.name : ''}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar>
                           <CertificateIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
                         primary='Certificate'
-                        secondary={producer.product ? producer.product.description : ''}
+                        secondary={farmer.certificate ? farmer.certificate[0].name : ''}
                       />
                     </ListItem>
                   </List>

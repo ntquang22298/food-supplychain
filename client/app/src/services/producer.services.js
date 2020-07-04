@@ -12,7 +12,7 @@ export const producerService = {
   getProduct,
   getAllProduct,
   deleteProduct,
-  getAllProductByFarmer
+  getAllProductByFarmer,
 };
 //------------Farmer-----------------------------------------------------------------------//
 // create a farmer
@@ -25,10 +25,10 @@ async function createFarmer(farmer) {
         name: farmer.name,
         address: farmer.address,
         description: farmer.description,
-        imageUrl: farmer.imageUrl
+        imageUrl: farmer.imageUrl,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -48,10 +48,11 @@ async function editFarmer(farmerId, farmer) {
         name: farmer.name,
         address: farmer.address,
         description: farmer.description,
-        imageUrl: farmer.imageUrl
+        imageUrl: farmer.imageUrl,
+        username: farmer.username,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -64,7 +65,7 @@ async function editFarmer(farmerId, farmer) {
 async function deleteFarmer(farmerId) {
   try {
     let response = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/farmer/${farmerId}`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return response.data;
@@ -78,7 +79,7 @@ async function deleteFarmer(farmerId) {
 async function getFarmer(farmerId) {
   try {
     let response = await axios.get(`${process.env.REACT_APP_API_BACKEND}/info/farmer/${farmerId}`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
     return response.data;
   } catch (error) {
@@ -92,7 +93,7 @@ async function getFarmerByUsername(username) {
     let response = await axios.get(
       `${process.env.REACT_APP_API_BACKEND}/info/farmer-detail/${username}`,
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
     return response.data;
@@ -105,7 +106,7 @@ async function getFarmerByUsername(username) {
 async function getAllFarmer() {
   try {
     let response = await axios.get(`${process.env.REACT_APP_API_BACKEND}/farmer`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return response.data;
@@ -126,10 +127,10 @@ async function createProduct(product) {
         name: product.name,
         type: product.type,
         origin: product.origin,
-        description: product.description
+        description: product.description,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
     return response.data;
@@ -147,10 +148,10 @@ async function editProduct(productId, product) {
         name: product.name,
         type: product.type,
         origin: product.origin,
-        description: product.description
+        description: product.description,
       },
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
     return response.data;
@@ -161,7 +162,7 @@ async function editProduct(productId, product) {
 async function getAllProduct() {
   try {
     let response = await axios.get(`${process.env.REACT_APP_API_BACKEND}/product`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return response.data.products;
@@ -174,7 +175,7 @@ async function getProduct(productId) {
     let response = await axios.get(
       `${process.env.REACT_APP_API_BACKEND}/info/product/${productId}`,
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
@@ -186,7 +187,7 @@ async function getProduct(productId) {
 async function deleteProduct(productId) {
   try {
     let response = await axios.delete(`${process.env.REACT_APP_API_BACKEND}/product/${productId}`, {
-      headers: authHeader()
+      headers: authHeader(),
     });
 
     return response.data;
@@ -202,7 +203,7 @@ async function getAllProductByFarmer(farmerUsername) {
     let response = await axios.get(
       `${process.env.REACT_APP_API_BACKEND}/product/farmer/${farmerUsername}`,
       {
-        headers: authHeader()
+        headers: authHeader(),
       }
     );
 
